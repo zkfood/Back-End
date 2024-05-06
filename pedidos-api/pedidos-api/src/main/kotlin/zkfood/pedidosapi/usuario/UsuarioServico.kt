@@ -1,7 +1,7 @@
 package zkfood.pedidosapi.usuario
 
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.erros.NaoEncontradoException
+import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.usuario.usuarioDado.Usuario
 
 @Service
@@ -18,7 +18,7 @@ class UsuarioServico(
         // fiz a busca no banco e não encontrou
 
         if (false) { // finge que é resultado da busca
-            throw NaoEncontradoException("Usuario")
+            throw NaoEncontradoPorIdExcecao(id)
         }
 
         //ex de como usar try catch
