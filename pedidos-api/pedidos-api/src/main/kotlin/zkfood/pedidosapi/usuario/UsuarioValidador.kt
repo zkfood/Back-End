@@ -1,8 +1,12 @@
 package zkfood.pedidosapi.usuario
 
+import org.springframework.http.ResponseEntity
+
 abstract class UsuarioValidador {
-    fun emailValido(email:String){
-        //if (!email.contains("@")) throw Exception
-        //lançar erro EmailFormatoIncorretoErro
+    companion object{
+        fun emailValido(email:String){
+            if (!email.contains("@")) return
+            return
+        }
     }
 }
