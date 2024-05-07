@@ -1,8 +1,20 @@
 package zkfood.pedidosapi.usuario.usuarioDado
 
-class Usuario {
-    var nome:String = "";
-    var email:String = "";
-    var senha:String = "";
-    var cpf:Int = 0;
+import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+
+@Entity
+data class Usuario (
+    @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY) var id:Int? = null,
+    var nome:String? = null,
+    var email:String? = null,
+    @JsonIgnore var senha:String? = null,
+    var cpf:String? = null
+    //var telefone:MutableList<Telefone>// usar many to one só q na classe Telefone
+    //var endereco:MutableList<Endereco>// usar many to one só q na classe Endereco
+) {
+    constructor(paramEmail:String):this(email = paramEmail);
 }
