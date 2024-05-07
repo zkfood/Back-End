@@ -1,10 +1,10 @@
 package zkfood.pedidosapi.usuario
 
-import jakarta.validation.Valid
 import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.usuario.usuarioDado.UsuarioCadastro
+import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.usuario.usuarioDado.Usuario
 
 @Service
@@ -18,7 +18,7 @@ class UsuarioServico(
         // fazer mais validações no geral, se necessário
         val usuarioDto = mapper.map(novoUsuario, Usuario::class.java);
 
-        val filtro = Usuario(email = novoUsuario.email)
+        val filtro = Usuario(email = novoUsuario.email);
 
         val cadastro = super.cadastrar(usuarioDto, filtro);
 

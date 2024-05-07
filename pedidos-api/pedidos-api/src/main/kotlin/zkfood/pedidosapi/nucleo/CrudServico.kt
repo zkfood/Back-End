@@ -11,6 +11,7 @@ import zkfood.pedidosapi.nucleo.erros.EntidadeImprocessavelExcecao
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.nucleo.utilidade.ListaUtil
 import kotlin.reflect.KProperty1
+import kotlin.reflect.full.memberProperties
 
 @Service
 abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
@@ -71,8 +72,26 @@ abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
 
         return cadastro;
     }
-    protected fun atualizar(id:Int, dto:T){
-        val atualizar:T = acharPorId(id);
+    fun atualizar(id: Int, dto: T) {
+        // TODO: validar este método
+        val entidadeExistente: T = acharPorId(id)
+        val entidadeClass = entidadeExistente::class.java
+
+        for (propriedade in entidadeClass.kotlin.memberProperties) {
+            val valorDTO = (propriedade as KProperty1<T, *>).call(dto)
+
+            if (valorDTO != null) {
+                try {
+                    val campoEntidade = entidadeClass.getDeclaredField(propriedade.name)
+                    campoEntidade.isAccessible = true
+                    campoEntidade.set(entidadeExistente, valorDTO)
+                } catch (ex: NoSuchFieldException) {
+                    // caso o campo nn exista na entidade
+                }
+            }
+        }
+
+        repository.save(entidadeExistente)
     }
     protected fun deletarPorId(id:Int){
         acharPorId(id);
