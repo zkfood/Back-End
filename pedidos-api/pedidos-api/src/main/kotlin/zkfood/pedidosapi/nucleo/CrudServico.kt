@@ -72,7 +72,7 @@ abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
 
         return cadastro;
     }
-    fun atualizar(id: Int, dto: T) {
+    protected fun atualizar(id: Int, dto: T) {
         // TODO: validar este método
         val entidadeExistente: T = acharPorId(id)
         val entidadeClass = entidadeExistente::class.java
@@ -90,13 +90,13 @@ abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
                 }
             }
         }
-
         repository.save(entidadeExistente)
     }
-    protected fun deletarPorId(id:Int){
-        acharPorId(id);
+    protected fun deletarPorId(id:Int):T{
+        val dto:T = acharPorId(id);
+        repository.deleteById(id);
 
-        return repository.deleteById(id);
+        return dto;
     }
     private fun getEntidade(entidade:T):EntidadesEnum{
         val entidadesEnum = EntidadesEnum.fromClasse(entidade.javaClass);
