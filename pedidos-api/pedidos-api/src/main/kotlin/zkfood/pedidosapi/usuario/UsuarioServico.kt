@@ -1,27 +1,33 @@
 package zkfood.pedidosapi.usuario
 
+import jakarta.validation.Valid
+import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.erros.NaoEncontradoException
+import zkfood.pedidosapi.nucleo.CrudServico
+import zkfood.pedidosapi.usuario.usuarioDado.UsuarioCadastro
 import zkfood.pedidosapi.usuario.usuarioDado.Usuario
 
 @Service
 class UsuarioServico(
-    val usuarioRepositorio:UsuarioRepositorio
-) {
-    fun cadastrarUsuario(usuario: Usuario){
-        UsuarioValidador.emailValido(usuario.email);
+    val usuarioRepositorio:UsuarioRepositorio,
+    val mapper: ModelMapper = ModelMapper()
+):CrudServico<Usuario>(usuarioRepositorio){
 
-        usuarioRepositorio.save(usuario);
+    fun cadastrar(novoUsuario:UsuarioCadastro):Usuario{
+        // fazer validação de email, se ele existe
+        // fazer mais validações no geral, se necessário
+        val usuarioDto = mapper.map(novoUsuario, Usuario::class.java);
+
+        val filtro = Usuario(email = novoUsuario.email)
+
+        val cadastro = super.cadastrar(usuarioDto, filtro);
+
+        return cadastro;
     }
 
-    fun buscarPorId(id: Int) {
-        // fiz a busca no banco e não encontrou
+    fun listar():List<Usuario>{
+        val listaUsuario:List<Usuario> = super.listarEntidade(null, null);
 
-        if (false) { // finge que é resultado da busca
-            throw NaoEncontradoException("Usuario")
-        }
-
-        //ex de como usar try catch
-        // tentei pegar um atributo de um objeto mas tava nulo, quero evitar nullpointer pq não sei o que vem
+        return listaUsuario;
     }
 }

@@ -6,5 +6,5 @@ import zkfood.pedidosapi.nucleo.enums.EntidadesEnum
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
 class DadoDuplicadoExcecao:RuntimeException {
-    constructor(dto: Any, entidade: EntidadesEnum) : super("Entrada $dto duplicada em $entidade!");
+    constructor(dto:Any, entidade:EntidadesEnum):super("Entrada $dto duplicada em ${entidade.entidade}!");
 }

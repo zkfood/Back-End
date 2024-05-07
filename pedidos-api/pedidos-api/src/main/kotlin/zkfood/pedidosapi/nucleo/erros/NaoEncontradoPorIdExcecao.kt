@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 class NaoEncontradoPorIdExcecao:RuntimeException {
-    constructor(id: Int) : super("Entidade com $id não encontrada!");
+    constructor(id: Int):super("Entidade com $id não encontrada!");
 }
