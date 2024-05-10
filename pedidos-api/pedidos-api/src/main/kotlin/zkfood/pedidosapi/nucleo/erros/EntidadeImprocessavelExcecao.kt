@@ -5,5 +5,5 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
 class EntidadeImprocessavelExcecao:RuntimeException {
-    constructor(dto:Any):super("Entidade $dto não processável");
+    constructor(classe:Class<*>):super("Não foi possível processar os dados de ${classe.name}");
 }
