@@ -14,29 +14,42 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
 @Service
-abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
-    protected fun listarEntidade(
+// T -> tipo genérico, ou seja, pode ser um usuário, pedido, email (ORM, ou seja, a q tem o @Entity)
+// usamos isso para nossa classe aceitar um Tipo(Classe, no kotlin uma Classe é um Tipo, ex Int, String)
+abstract class CrudServico<T : Any>(
+    // além de recebermos no construtor o repositório jpa
+    val repositorio: JpaRepository<T, Int>,
+) {
+    fun listarEntidade( // TODO: receber um criteria builder e fazer oq ter q fazer
+        // exemplo é oq o o springboot usa para fazer o filtro, mas basicamente é um dto
+        // de uma classe (no nosso caso serão apenas as ORM)
         exemplo:T?,
+        // nessa classe é uma enum com ativo ou inativo (true ou false) para ativar esse fitro em especifico
         ignorarFormatacaoEnum:IgnorarFormatacaoEnum?
     ):List<T> {
+        // se um deles estiver null, faz o findAll sem filtro
         if (exemplo == null || ignorarFormatacaoEnum == null){
-            val lista:List<T> = repository.findAll();
+            val lista:List<T> = repositorio.findAll();
+            // valida a lista para saber se ela está vazia
             ListaUtil().validarLista(lista);
 
             return lista;
         }
-        val filtro = combinadorFiltro(exemplo, ignorarFormatacaoEnum);
+        // Chama o metodo combinadorFiltro passando o exemplo e mais um filtro, para criar um Example
+        val filtro:Example<T> = combinadorFiltro(exemplo, ignorarFormatacaoEnum);
 
-        val lista:List<T> = repository.findAll(filtro);
+        // faz o findAll com filtro
+        val lista:List<T> = repositorio.findAll(filtro);
         ListaUtil().validarLista(lista);
 
         return lista;
     }
+    @Deprecated("Uma nova função de filtro será implementada")
     private fun combinadorFiltro(exemplo:T, ignorarFormatacaoEnum:IgnorarFormatacaoEnum):Example<T>{
         // obtém todas as chaves da classe que nós passarmos
         val propriedades = exemplo::class.members.filterIsInstance<KProperty1<T, *>>();
         // instancia a classe Example, para depois adicionarmos valores
-        val combinador = ExampleMatcher.matching();
+        val combinador:ExampleMatcher = ExampleMatcher.matching();
 
         // se estiver ativo irá ignorar a formatação
         if (ignorarFormatacaoEnum == IgnorarFormatacaoEnum.ATIVO) combinador.withIgnoreCase();
@@ -47,6 +60,7 @@ abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
             if (propriedade.get(exemplo) != null) {
                 // pega o nome da propriedade, então com o exemplo de cima pegaria "nome"
                 // e coloca no filtro do Exemple
+                // aq em baixo ele já está fazendo com contains oq não é para fazer
                 combinador.withMatcher(propriedade.name, ExampleMatcher.GenericPropertyMatchers.contains());
             }
         }
@@ -55,52 +69,52 @@ abstract class CrudServico<T : Any>(val repository: JpaRepository<T, Int>) {
 
         return filtro;
     }
-    protected fun acharPorId(id:Int):T {
-        val entidade = repository.findById(id);
+    fun acharPorId(id:Int):T {
+        val entidade = repositorio.findById(id);
 
         if (entidade.isPresent) return entidade.get();
         throw NaoEncontradoPorIdExcecao(id);
     }
-    protected fun cadastrar(
-        dto:T,
-        exemplo:T
-    ):T {
-        val estaDuplicado:Boolean = repository.exists(combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
-        if (estaDuplicado) throw DadoDuplicadoExcecao(dto,getEntidade(dto));
+    fun cadastrar(dto:T, exemplo:T):T {
+        // aqui valida se o dado existe apartir de um filtro, e a formatação é padrão inativo, pois
+        // AaA é diferente de AAA, mas esse filtro será refeito para uma forma melhor
+        val estaDuplicado:Boolean = repositorio.exists(combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+        if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo,getEntidade(dto));
 
-        val cadastro:T = repository.save(dto);
+        val cadastro:T = repositorio.save(dto);
 
         return cadastro;
     }
-    protected fun atualizar(id: Int, dto: T) {
-        // TODO: validar este método
-        val entidadeExistente: T = acharPorId(id)
-        val entidadeClass = entidadeExistente::class.java
+    fun atualizar(id:Int, dto:T):T {
+        val entidade:T = acharPorId(id);
+        val classe:Class<*>?= getEntidade(entidade).classe;
 
-        for (propriedade in entidadeClass.kotlin.memberProperties) {
-            val valorDTO = (propriedade as KProperty1<T, *>).call(dto)
-
-            if (valorDTO != null) {
+        for (propriedade in classe!!.kotlin.memberProperties) {
+            val valor = (propriedade as KProperty1<T, *>).call(dto);
+            if (valor != null) {
                 try {
-                    val campoEntidade = entidadeClass.getDeclaredField(propriedade.name)
-                    campoEntidade.isAccessible = true
-                    campoEntidade.set(entidadeExistente, valorDTO)
-                } catch (ex: NoSuchFieldException) {
-                    // caso o campo nn exista na entidade
+                    val chave = classe.getDeclaredField(propriedade.name);
+                    chave.isAccessible = true;
+                    chave.set(entidade, valor);
+                } catch (erro: RuntimeException) {
+                    throw EntidadeImprocessavelExcecao(classe);
                 }
             }
         }
-        repository.save(entidadeExistente)
+        return repositorio.save(entidade)
     }
-    protected fun deletarPorId(id:Int):T{
+    fun deletarPorId(id:Int):T{
         val dto:T = acharPorId(id);
-        repository.deleteById(id);
+        repositorio.deleteById(id);
 
         return dto;
     }
     private fun getEntidade(entidade:T):EntidadesEnum{
-        val entidadesEnum = EntidadesEnum.fromClasse(entidade.javaClass);
-        if (entidadesEnum == null) throw EntidadeImprocessavelExcecao(entidade);
+        // recebe um dto que é do tipo que recebemos inicialmente (ORM)
+        // chamamos o metodo fromClasse da nossa EntidadesEnum para descobrirmos sobre qual ORM estamos falando
+        // o .javaClass faz isso por nós
+        val entidadesEnum:EntidadesEnum? = EntidadesEnum.fromClasse(entidade.javaClass);
+        if (entidadesEnum == null) throw EntidadeImprocessavelExcecao(entidade.javaClass);
 
         return entidadesEnum;
     }

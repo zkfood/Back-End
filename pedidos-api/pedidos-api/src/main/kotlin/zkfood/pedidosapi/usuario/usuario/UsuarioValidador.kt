@@ -1,6 +1,4 @@
-package zkfood.pedidosapi.usuario
-
-import org.springframework.http.ResponseEntity
+package zkfood.pedidosapi.usuario.usuario
 
 abstract class UsuarioValidador {
     companion object{
