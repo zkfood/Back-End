@@ -8,18 +8,37 @@ import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 
 @Service
 class UsuarioServico(
-    val usuarioRepositorio:UsuarioRepositorio,
-    val mapper:ModelMapper = ModelMapper()
-):CrudServico<Usuario>(usuarioRepositorio){
+    val usuarioRepositorio: UsuarioRepositorio,
+    val mapper: ModelMapper = ModelMapper()
+) : CrudServico<Usuario>(usuarioRepositorio) {
+
     fun cadastrar(novoUsuario: UsuarioCadastro): Usuario {
-        // fazer validação de email, se ele existe
-        // fazer mais validações no geral, se necessário
-        val usuarioDto: Usuario = mapper.map(novoUsuario, Usuario::class.java);
+        // Validar se o e-mail é válido
+        UsuarioValidador.emailValido(novoUsuario.email)
 
-        val filtro: Usuario = Usuario(cpf = novoUsuario.cpf);
+        val usuarioDto: Usuario = mapper.map(novoUsuario, Usuario::class.java)
 
-        val cadastro: Usuario = super.cadastrar(usuarioDto, filtro);
+        // Verificar se é cadastro online
+        if (novoUsuario.eCadastroOnline) {
+            // Se for cadastro online, validar se a senha foi fornecida
+            if (novoUsuario.senha.isNullOrEmpty()) {
+                throw SenhaInvalidaException("Senha é obrigatória para cadastro online")
+            }
+        } else {
+            // Se não for cadastro online, gerar uma senha aleatória
+            val senhaAleatoria = gerarSenhaAleatoria()
+            usuarioDto.senha = senhaAleatoria
+        }
 
-        return cadastro;
+        // Chamar o método de cadastro da classe pai (CrudServico)
+        val filtro: Usuario = Usuario(cpf = novoUsuario.cpf)
+        val cadastro: Usuario = super.cadastrar(usuarioDto, filtro)
+
+        return cadastro
+    }
+
+    private fun gerarSenhaAleatoria(): String {
+        // Lógica para gerar senha aleatória
+        // Retorne uma senha aleatória (pode ser implementado conforme necessário)
     }
 }
