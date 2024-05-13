@@ -11,14 +11,7 @@ import zkfood.pedidosapi.nucleo.erros.EntidadeImprocessavelExcecao
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.nucleo.utilidade.ListaUtil
 import kotlin.reflect.KProperty1
-<<<<<<< HEAD
-<<<<<<< HEAD
 import kotlin.reflect.full.memberProperties
-=======
->>>>>>> parent of db05f6a (fun atualizar)
-=======
->>>>>>> parent of db05f6a (fun atualizar)
-
 @Service
 // T -> tipo genérico, ou seja, pode ser um usuário, pedido, email (ORM, ou seja, a q tem o @Entity)
 // usamos isso para nossa classe aceitar um Tipo(Classe, no kotlin uma Classe é um Tipo, ex Int, String)
@@ -91,8 +84,6 @@ abstract class CrudServico<T : Any>(
 
         return cadastro;
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
     fun atualizar(id:Int, dto:T):T {
         val entidade:T = acharPorId(id);
         val classe:Class<*>?= getEntidade(entidade).classe;
@@ -111,15 +102,7 @@ abstract class CrudServico<T : Any>(
         }
         return repositorio.save(entidade)
     }
-    fun deletarPorId(id:Int):T{
-=======
-=======
->>>>>>> parent of db05f6a (fun atualizar)
-    fun atualizar(id:Int, dto:T){
-        val atualizar:T = acharPorId(id);
-    }
-    protected fun deletarPorId(id:Int){
->>>>>>> parent of db05f6a (fun atualizar)
+    protected fun deletarPorId(id:Int):T{
         val dto:T = acharPorId(id);
         repositorio.deleteById(id);
 
