@@ -89,7 +89,7 @@ abstract class CrudServico<T : Any>(
         val classe:Class<*>?= getEntidade(entidade).classe;
 
         for (propriedade in classe!!.kotlin.memberProperties) {
-            val valor = (propriedade as KProperty1<T, *>).call(dto);
+            val valor = (propriedade as KProperty1<*, *>).call(dto);
             if (valor != null) {
                 try {
                     val chave = classe.getDeclaredField(propriedade.name);

@@ -26,7 +26,7 @@ class EnderecoControlador (
         return ResponseEntity.status(200).body(listaEndereco)
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/{id}")
     fun atualizar(@PathVariable id:Int, @RequestBody dto: Endereco):ResponseEntity<Endereco>{
         val endereco: Endereco = enderecoServico.atualizar(id, dto);
 
