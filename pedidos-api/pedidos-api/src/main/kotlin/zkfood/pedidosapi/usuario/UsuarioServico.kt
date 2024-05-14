@@ -1,15 +1,18 @@
 package zkfood.pedidosapi.usuario
 
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.erros.NaoEncontradoException
-import zkfood.pedidosapi.usuario.usuarioDado.Usuario
+import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
+import zkfood.pedidosapi.usuario.usuario.UsuarioRepositorio
+import zkfood.pedidosapi.usuario.usuario.UsuarioValidador
+import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 
 @Service
 class UsuarioServico(
-    val usuarioRepositorio:UsuarioRepositorio
+    val usuarioRepositorio:UsuarioRepositorio,
+    val usuarioValidador: UsuarioValidador
 ) {
     fun cadastrarUsuario(usuario: Usuario){
-        UsuarioValidador.emailValido(usuario.email);
+        UsuarioValidador.emailValido(usuario.email!!);
 
         usuarioRepositorio.save(usuario);
     }
@@ -18,7 +21,7 @@ class UsuarioServico(
         // fiz a busca no banco e não encontrou
 
         if (false) { // finge que é resultado da busca
-            throw NaoEncontradoException("Usuario")
+            throw NaoEncontradoPorIdExcecao(id)
         }
 
         //ex de como usar try catch
