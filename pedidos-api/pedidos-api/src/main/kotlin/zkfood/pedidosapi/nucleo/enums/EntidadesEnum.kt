@@ -1,10 +1,12 @@
 package zkfood.pedidosapi.nucleo.enums
 
+import zkfood.pedidosapi.telefone.telefone.telefoneDado.Telefone
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 
 enum class EntidadesEnum(val entidade: String, val classe: Class<*>? = null) {
     // aqui declaramos quais ORM vamos usar
     USUARIO("Usuários", Usuario::class.java),
+    TELEFONE("Telefones", Telefone::class.java),
     PEDIDOS("Pedidos");
 
     companion object {
