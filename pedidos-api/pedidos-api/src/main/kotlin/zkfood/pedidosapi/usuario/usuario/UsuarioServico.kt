@@ -2,7 +2,6 @@ package zkfood.pedidosapi.usuario.usuario
 
 import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.UsuarioCadastro
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 

@@ -2,7 +2,6 @@ package zkfood.pedidosapi.telefone.telefone
 
 import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.telefone.telefone.telefoneDado.Telefone
 import zkfood.pedidosapi.telefone.telefone.telefoneDado.TelefoneCadastro
 

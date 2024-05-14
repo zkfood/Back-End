@@ -13,7 +13,7 @@ import zkfood.pedidosapi.telefone.telefone.telefoneDado.Telefone
 import zkfood.pedidosapi.telefone.telefone.telefoneDado.TelefoneCadastro
 
 @RestController
-@RequestMapping("/telefone")
+@RequestMapping("/usuarios/{idUsuario}/telefone")
 class TelefoneControlador (
     val telefoneServico: TelefoneServico
 ){
