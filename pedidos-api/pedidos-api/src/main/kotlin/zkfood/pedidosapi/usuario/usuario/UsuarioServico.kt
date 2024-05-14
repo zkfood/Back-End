@@ -1,10 +1,11 @@
 package zkfood.pedidosapi.usuario.usuario
 
-import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
-import zkfood.pedidosapi.usuario.usuario.usuarioDado.UsuarioCadastro
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
+import zkfood.pedidosapi.usuario.usuario.usuarioDado.UsuarioCadastro
+import org.modelmapper.ModelMapper
+import java.security.SecureRandom
 
 @Service
 class UsuarioServico(
@@ -31,14 +32,44 @@ class UsuarioServico(
         }
 
         // Chamar o método de cadastro da classe pai (CrudServico)
-        val filtro: Usuario = Usuario(cpf = novoUsuario.cpf)
-        val cadastro: Usuario = super.cadastrar(usuarioDto, filtro)
+        val filtro = Usuario(cpf = novoUsuario.cpf)
+        val cadastro = super.cadastrar(usuarioDto, filtro)
 
         return cadastro
     }
 
     private fun gerarSenhaAleatoria(): String {
-        // Lógica para gerar senha aleatória
-        // Retorne uma senha aleatória (pode ser implementado conforme necessário)
+        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        val random = SecureRandom()
+        return (1..12)
+            .map { chars[random.nextInt(chars.length)] }
+            .joinToString("")
+    }
+
+
+    //não esta no escopo
+  /*  fun buscarPorEmail(email: String): Usuario {
+        return usuarioRepositorio.findByEmail(email) ?: throw NaoEncontradoPorIdExcecao(email)
+    }
+    */
+
+    fun buscarPorNome(nome: String): List<Usuario> {
+        return usuarioRepositorio.findByNomeContainingAndAtivoTrue(nome)
+    }
+
+    fun alterarSenha(id: Int, novaSenha: String): Usuario {
+        val usuario = acharPorId(id)
+        usuario.senha = novaSenha
+        return usuarioRepositorio.save(usuario)
+    }
+
+    fun inativarUsuario(id: Int): Usuario {
+        val usuario = acharPorId(id)
+        usuario.ativo = false
+        return usuarioRepositorio.save(usuario)
+    }
+
+    fun contarUsuarios(): Long {
+        return usuarioRepositorio.countByAtivoTrue()
     }
 }

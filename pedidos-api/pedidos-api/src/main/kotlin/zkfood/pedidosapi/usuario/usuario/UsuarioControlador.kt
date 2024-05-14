@@ -1,17 +1,12 @@
 package zkfood.pedidosapi.usuario.usuario
 
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.UsuarioCadastro
-
+import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
 @RestController
 @RequestMapping("/usuarios")
 class UsuarioControlador(
@@ -31,7 +26,7 @@ class UsuarioControlador(
 
     @GetMapping
     fun listar(): ResponseEntity<List<Usuario>> {
-        val listaUsuario: List<Usuario> = usuarioServico.listarEntidade(null, null)
+        val listaUsuario: List<Usuario> = usuarioServico.listarEntidade(null, IgnorarFormatacaoEnum.ATIVO)
         return ResponseEntity.ok(listaUsuario)
     }
 
@@ -47,54 +42,35 @@ class UsuarioControlador(
         return ResponseEntity.noContent().build()
     }
 
-    //usuário por e-mail
-    @GetMapping("/buscar-por-email")
+    //não esta no escopo
+ /*   @GetMapping("/buscar-por-email")
     fun buscarPorEmail(@RequestParam email: String): ResponseEntity<Usuario> {
         val usuario: Usuario = usuarioServico.buscarPorEmail(email)
         return ResponseEntity.ok(usuario)
     }
+*/
 
-    // CPF
-    @GetMapping("/validar-cpf")
-    fun validarCpf(@RequestParam cpf: String): ResponseEntity<String> {
-        val mensagem: String = if (usuarioServico.validarCpf(cpf)) {
-            "CPF válido"
-        } else {
-            "CPF inválido"
-        }
-        return ResponseEntity.ok(mensagem)
-    }
-
-    //ALTERAR senha, nn sei se vai funcionar na pratica
     @PatchMapping("/{id}/alterar-senha")
     fun alterarSenha(@PathVariable id: Int, @RequestParam novaSenha: String): ResponseEntity<Usuario> {
         val usuarioAtualizado: Usuario = usuarioServico.alterarSenha(id, novaSenha)
         return ResponseEntity.ok(usuarioAtualizado)
     }
 
-    //buscar por nome
     @GetMapping("/buscar-por-nome")
     fun buscarPorNome(@RequestParam nome: String): ResponseEntity<List<Usuario>> {
         val usuarios: List<Usuario> = usuarioServico.buscarPorNome(nome)
         return ResponseEntity.ok(usuarios)
     }
 
-    //classe servico eu te amo
-
-    //total de usuarios, metrica de vaidade eu sei
     @GetMapping("/contar-usuarios")
     fun contarUsuarios(): ResponseEntity<Long> {
         val totalUsuarios: Long = usuarioServico.contarUsuarios()
         return ResponseEntity.ok(totalUsuarios)
     }
 
-    //inativar usuário
     @PatchMapping("/{id}/inativar")
     fun inativarUsuario(@PathVariable id: Int): ResponseEntity<Usuario> {
         val usuarioInativado: Usuario = usuarioServico.inativarUsuario(id)
         return ResponseEntity.ok(usuarioInativado)
     }
-
-
-
 }

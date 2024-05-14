@@ -6,14 +6,15 @@ import jakarta.validation.constraints.Size
 
 data class UsuarioCadastro (
     @field:NotBlank
-    var nome:String,
+    var nome: String,
 
     @field:NotBlank @field:Email
-    var email:String,
+    var email: String,
 
-    @field:NotBlank
-    var senha:String,
+    var senha: String? = null,
 
     @field:NotBlank @field:Size(min = 11, max = 11)
-    var cpf:String
+    var cpf: String,
+
+    var eCadastroOnline: Boolean = false
 )
