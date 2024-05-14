@@ -57,6 +57,7 @@ class UsuarioServico(
         return usuarioRepositorio.findByNomeContainingAndAtivoTrue(nome)
     }
 
+
     fun alterarSenha(id: Int, novaSenha: String): Usuario {
         val usuario = acharPorId(id)
         usuario.senha = novaSenha

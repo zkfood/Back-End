@@ -51,14 +51,15 @@ class UsuarioControlador(
 */
 
     @PatchMapping("/{id}/alterar-senha")
-    fun alterarSenha(@PathVariable id: Int, @RequestParam novaSenha: String): ResponseEntity<Usuario> {
+    fun alterarSenha(@PathVariable id: Int, @RequestBody novaSenha: String): ResponseEntity<Usuario> {
         val usuarioAtualizado: Usuario = usuarioServico.alterarSenha(id, novaSenha)
         return ResponseEntity.ok(usuarioAtualizado)
     }
 
     @GetMapping("/buscar-por-nome")
     fun buscarPorNome(@RequestParam nome: String): ResponseEntity<List<Usuario>> {
-        val usuarios: List<Usuario> = usuarioServico.buscarPorNome(nome)
+        val usuarioExemplo = Usuario(nome = nome)
+        val usuarios: List<Usuario> = usuarioServico.listarEntidade(usuarioExemplo, IgnorarFormatacaoEnum.ATIVO)
         return ResponseEntity.ok(usuarios)
     }
 
