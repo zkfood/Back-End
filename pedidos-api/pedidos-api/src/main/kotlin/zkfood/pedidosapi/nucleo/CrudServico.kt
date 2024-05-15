@@ -12,6 +12,7 @@ import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.nucleo.utilidade.ListaUtil
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
+
 @Service
 // T -> tipo genérico, ou seja, pode ser um usuário, pedido, email (ORM, ou seja, a q tem o @Entity)
 // usamos isso para nossa classe aceitar um Tipo(Classe, no kotlin uma Classe é um Tipo, ex Int, String)
@@ -89,7 +90,7 @@ abstract class CrudServico<T : Any>(
         val classe:Class<*>?= getEntidade(entidade).classe;
 
         for (propriedade in classe!!.kotlin.memberProperties) {
-            val valor = (propriedade as KProperty1<*, *>).call(dto);
+            val valor = (propriedade as KProperty1<T, *>).call(dto);
             if (valor != null) {
                 try {
                     val chave = classe.getDeclaredField(propriedade.name);
@@ -102,7 +103,7 @@ abstract class CrudServico<T : Any>(
         }
         return repositorio.save(entidade)
     }
-    protected fun deletarPorId(id:Int):T{
+    fun deletarPorId(id:Int):T{
         val dto:T = acharPorId(id);
         repositorio.deleteById(id);
 
