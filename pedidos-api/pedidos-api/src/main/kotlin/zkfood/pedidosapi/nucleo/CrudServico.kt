@@ -126,6 +126,7 @@ abstract class CrudServico<T : Any>(
 //            if (propriedade.name == "Id") return propriedade.get(objeto);
 //        }
 //        return null;
+
 //    }
 // typeParameters: <T> na frente da assinatura do método ou classe,
 // serve para dizer para aquela função em especifico
