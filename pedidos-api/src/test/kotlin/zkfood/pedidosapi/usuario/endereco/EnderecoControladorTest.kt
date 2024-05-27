@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity
 import zkfood.pedidosapi.usuario.telefone.telefoneDado.Telefone
 import zkfood.pedidosapi.usuario.telefone.telefoneDado.TelefoneCadastro
 
-class TelefoneControladorTest {
+class TelefoneControladorTests {
 
     @Mock
     private lateinit var telefoneServico: TelefoneServico
