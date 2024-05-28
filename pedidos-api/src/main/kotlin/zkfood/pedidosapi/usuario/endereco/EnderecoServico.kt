@@ -14,7 +14,7 @@ import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 @Service
 class EnderecoServico(
     val enderecoRepositorio: EnderecoRepositorio,
-    val mapper:ModelMapper = ModelMapper(),
+    val mapper:ModelMapper,
     val usuarioServico: UsuarioServico
 ): CrudServico<Endereco>(enderecoRepositorio) {
     private fun validarUsuario(idUsuarioParametro:Int): Usuario{
