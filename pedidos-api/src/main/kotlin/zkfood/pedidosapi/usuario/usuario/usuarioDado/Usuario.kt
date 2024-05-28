@@ -17,7 +17,7 @@ data class Usuario (
 
     var email: String? = null,
 
-//    @JsonIgnore
+    @JsonIgnore
     var senha: String? = null,
 
     var cpf: String? = null,
