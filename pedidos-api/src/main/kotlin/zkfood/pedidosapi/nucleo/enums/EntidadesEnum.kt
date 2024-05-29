@@ -1,5 +1,6 @@
 package zkfood.pedidosapi.nucleo.enums
 
+import zkfood.pedidosapi.produto.produtoDado.Produto
 import zkfood.pedidosapi.usuario.telefone.telefoneDado.Telefone
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.Endereco
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
@@ -9,6 +10,7 @@ enum class EntidadesEnum(val entidade: String, val classe: Class<*>? = null) {
     USUARIO("Usuários", Usuario::class.java),
     TELEFONE("Telefones", Telefone::class.java),
     ENDERECO("Endereços", Endereco::class.java),
+    PRODUTOS("Produtos", Produto::class.java),
     PEDIDOS("Pedidos");
 
     companion object {
