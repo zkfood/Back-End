@@ -21,10 +21,10 @@ data class Produto (
     @field:Size(min = 5)
     var descricao:String? = null,
 
-    @Positive
+    @field:Positive
     var valorUnitario:Double? = null,
 
-    @Positive
+    @field:Positive
     var qtdPessoas:Int? = null
 ){
 }
