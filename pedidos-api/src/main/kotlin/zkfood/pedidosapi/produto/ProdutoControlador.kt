@@ -22,7 +22,7 @@ class ProdutoControlador(
 
     @GetMapping
     fun listarProdutos():ResponseEntity<List<Produto>>{
-        val lista = produtoServico.listarProutos()
+        val lista = produtoServico.listarProdutos()
 
         return ResponseEntity.status(200).body(lista)
     }

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size
 import zkfood.pedidosapi.nucleo.enums.TipoProdutoEnum
 
 @Entity
-data class Produto (
+data class Produto(
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     var id:Int? = null,
 
@@ -16,7 +16,7 @@ data class Produto (
     @field:Enumerated(EnumType.STRING)
     var tipo: TipoProdutoEnum? = null,
 
-    var disponibilidade:Boolean? = false,
+    var disponibilidade:Boolean? = null,
 
     @field:Size(min = 5)
     var descricao:String? = null,

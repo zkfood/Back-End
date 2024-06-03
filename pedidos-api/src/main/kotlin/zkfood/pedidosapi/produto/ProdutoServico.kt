@@ -1,7 +1,9 @@
 package zkfood.pedidosapi.produto
 
 import org.modelmapper.ModelMapper
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.produto.produtoDado.NovoValor
@@ -12,7 +14,7 @@ import java.util.*
 @Service
 class ProdutoServico(
     val produtoRepositorio: ProdutoRepositorio,
-    val mapper: ModelMapper
+    val mapper: ModelMapper = ModelMapper()
 ):CrudServico<Produto>(produtoRepositorio){
 
     fun cadastrar(novoProduto: ProdutoCadastro):Produto{
@@ -25,7 +27,7 @@ class ProdutoServico(
 
     }
 
-    fun listarProutos():List<Produto>{
+    fun listarProdutos():List<Produto>{
         val lista = produtoRepositorio.findAll()
 
         return lista
@@ -38,7 +40,9 @@ class ProdutoServico(
     }
 
     fun alterarValorUnitario(id:Int, novoValor:NovoValor):Produto{
-        val produto = acharPorId(id);
+        val produto = produtoRepositorio.findById(id).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado")
+        }
         produto.valorUnitario = novoValor.valor
 
         val produtoAtualizado:Produto = super.atualizar(produto.id!!, produto);
@@ -48,5 +52,11 @@ class ProdutoServico(
 
     fun deletarProduto(id:Int){
         super.deletarPorId(id)
+    }
+
+    fun buscarProdutoPorId(id: Int): Produto {
+        return produtoRepositorio.findById(id).orElseThrow {
+            ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado")
+        }
     }
 }
