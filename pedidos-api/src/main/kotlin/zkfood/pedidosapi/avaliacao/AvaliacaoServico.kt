@@ -1,9 +1,11 @@
 package zkfood.pedidosapi.avaliacao
 
 import jakarta.transaction.Transactional
+import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.Avaliacao
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoId
+import zkfood.pedidosapi.avaliacao.dto.AvaliacaoDTO
 import zkfood.pedidosapi.produto.ProdutoRepositorio
 import zkfood.pedidosapi.usuario.usuario.UsuarioRepositorio
 
@@ -11,7 +13,8 @@ import zkfood.pedidosapi.usuario.usuario.UsuarioRepositorio
 class AvaliacaoServico (
     val avaliacaoRepositorio: AvaliacaoRepositorio,
     val usuarioRepositorio: UsuarioRepositorio,
-    val produtoRepositorio: ProdutoRepositorio
+    val produtoRepositorio: ProdutoRepositorio,
+    val mapper:ModelMapper = ModelMapper()
 ){
     @Transactional
     fun cadastrarOuAtualiazar(usuarioId: Int, produtoId:Int, favorito:Boolean, qtdEstrelas:Int, descricao:String):Avaliacao{
@@ -20,17 +23,17 @@ class AvaliacaoServico (
 
         val avaliacaoId = AvaliacaoId(usuarioId,produtoId)
         val avaliacaoExistente = avaliacaoRepositorio.findById(avaliacaoId)
-        val status = if (avaliacaoExistente.isPresent) 200 else 201
 
-        val avaliacao = Avaliacao(
-            usuarioId = usuarioId,
-            produtoId = produtoId,
-            favorito = favorito,
-            qtdEstrelas = qtdEstrelas,
-            descricao = descricao
-        )
+        val avaliacao = avaliacaoExistente.orElseGet{
+            Avaliacao(
+                usuarioId = usuario.id!!,
+                produtoId = produto.id!!
+            )
+        }
 
+        mapper.map(AvaliacaoDTO(favorito, qtdEstrelas, descricao), avaliacao)
         avaliacaoRepositorio.save(avaliacao)
+
         return avaliacao
     }
 
