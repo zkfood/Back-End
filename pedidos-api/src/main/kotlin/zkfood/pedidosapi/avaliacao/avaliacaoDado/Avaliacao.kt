@@ -5,12 +5,6 @@ import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import java.io.Serializable
-
-data class AvaliacaoId(
-    val usuarioId: Long = 0,
-    val produtoId: Long = 0
-) : Serializable
 
 @Entity
 @IdClass(AvaliacaoId::class)
