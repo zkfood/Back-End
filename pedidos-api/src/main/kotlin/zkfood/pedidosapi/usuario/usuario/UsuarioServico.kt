@@ -18,7 +18,7 @@ import java.security.SecureRandom
 class UsuarioServico(
     val usuarioRepositorio: UsuarioRepositorio,
     val enviarEmail: EnviarEmail,
-    val mapper: ModelMapper = ModelMapper()
+    val mapper: ModelMapper
 ) : CrudServico<Usuario>(usuarioRepositorio) {
     fun cadastrar(novoUsuario: UsuarioCadastro): Usuario {
         val usuarioDto: Usuario = mapper.map(novoUsuario, Usuario::class.java);

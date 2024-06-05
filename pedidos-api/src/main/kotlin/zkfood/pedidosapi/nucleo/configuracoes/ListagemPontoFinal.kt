@@ -21,19 +21,19 @@ class EndpointListener(
 
             val requisicaoMetodo = detalhes.methodsCondition.methods
             val valoresPadrao = detalhes.patternValues
-//            println(valoresPadrao)
-//            val requisicaoMetodoColorida = when {
-//                requisicaoMetodo.contains(RequestMethod.GET) -> "${CoresTerminalEnum.AZUL}GET${CoresTerminalEnum.PADRAO}"
-//                requisicaoMetodo.contains(RequestMethod.POST) -> "${CoresTerminalEnum.VERDE}POST${CoresTerminalEnum.PADRAO}"
-//                requisicaoMetodo.contains(RequestMethod.PATCH) -> "${CoresTerminalEnum.AMARELO}PUT${CoresTerminalEnum.PADRAO}"
-//                requisicaoMetodo.contains(RequestMethod.PUT) -> "${CoresTerminalEnum.LARANJA}PUT${CoresTerminalEnum.PADRAO}"
-//                requisicaoMetodo.contains(RequestMethod.DELETE) -> "${CoresTerminalEnum.VERMELHO}DELETE${CoresTerminalEnum.PADRAO}"
-//                else -> {
-//                    if ("/error" in valoresPadrao)"${CoresTerminalEnum.PRETO}ERRO${CoresTerminalEnum.PADRAO}"
-//                    "${CoresTerminalEnum.BRANCO}OUTRO${CoresTerminalEnum.PADRAO}"
-//                }
-//            }
-            println("- $requisicaoMetodo, $valoresPadrao: $classeMetodo.$nomeMetodo()")
+            println(valoresPadrao)
+            val requisicaoMetodoColorida = when {
+                requisicaoMetodo.contains(RequestMethod.GET) -> "${CoresTerminalEnum.AZUL}GET${CoresTerminalEnum.PADRAO}"
+                requisicaoMetodo.contains(RequestMethod.POST) -> "${CoresTerminalEnum.VERDE}POST${CoresTerminalEnum.PADRAO}"
+                requisicaoMetodo.contains(RequestMethod.PATCH) -> "${CoresTerminalEnum.AMARELO}PATCH${CoresTerminalEnum.PADRAO}"
+                requisicaoMetodo.contains(RequestMethod.PUT) -> "${CoresTerminalEnum.LARANJA}PUT${CoresTerminalEnum.PADRAO}"
+                requisicaoMetodo.contains(RequestMethod.DELETE) -> "${CoresTerminalEnum.VERMELHO}DELETE${CoresTerminalEnum.PADRAO}"
+                else -> {
+                    if ("/error" in valoresPadrao)"${CoresTerminalEnum.PRETO}ERRO${CoresTerminalEnum.PADRAO}"
+                    "${CoresTerminalEnum.BRANCO}OUTRO${CoresTerminalEnum.PADRAO}"
+                }
+            }
+            println("- $requisicaoMetodoColorida, $valoresPadrao: $classeMetodo.$nomeMetodo()")
         }
     }
 }
