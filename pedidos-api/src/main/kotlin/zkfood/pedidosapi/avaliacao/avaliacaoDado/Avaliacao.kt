@@ -10,10 +10,10 @@ import jakarta.validation.constraints.Size
 @IdClass(AvaliacaoId::class)
 data class Avaliacao(
     @Id
-    val usuarioId: Long,
+    val usuarioId: Int,
 
     @Id
-    val produtoId: Long,
+    val produtoId: Int,
 
     @field:NotNull
     var favorito: Boolean = false,
