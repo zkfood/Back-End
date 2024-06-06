@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito.*
+import org.modelmapper.ModelMapper
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.Endereco
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.EnderecoCadastro
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
@@ -16,17 +17,19 @@ class EnderecoServicoTest {
 
     lateinit var enderecoRepositorio: EnderecoRepositorio
     lateinit var usuarioServico: UsuarioServico
+    lateinit var mapper: ModelMapper
     lateinit var enderecoServico: EnderecoServico
 
     @BeforeEach
     fun setup() {
         enderecoRepositorio = mock(EnderecoRepositorio::class.java)
         usuarioServico = mock(UsuarioServico::class.java)
-        enderecoServico = EnderecoServico(enderecoRepositorio, usuarioServico = usuarioServico)
+        mapper = mock(ModelMapper::class.java)
+        enderecoServico = EnderecoServico(enderecoRepositorio, mapper, usuarioServico)
     }
 
     @Test
-    @DisplayName("Deve cadastrar um endereço com sucesso")
+    @DisplayName("deve cadastrar um endereço com sucesso")
     fun cadastrarEnderecoSucesso() {
         val enderecoCadastro = EnderecoCadastro("96969696", "Hadock", "Cidade Tiradentes", "82", "b")
         val usuarioId = 1
@@ -42,6 +45,7 @@ class EnderecoServicoTest {
         )
 
         `when`(usuarioServico.acharPorId(usuarioId)).thenReturn(usuario)
+        `when`(mapper.map(enderecoCadastro, Endereco::class.java)).thenReturn(endereco)
         `when`(enderecoRepositorio.save(any(Endereco::class.java))).thenReturn(endereco)
 
         val resultado = enderecoServico.cadastrar(enderecoCadastro, usuarioId)
@@ -56,7 +60,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao tentar cadastrar endereço para usuário inexistente")
+    @DisplayName("deve lançar exceção ao tentar cadastrar endereço para usuário inexistente")
     fun cadastrarEnderecoUsuarioInexistente() {
         val enderecoCadastro = EnderecoCadastro("96969696", "Hadock", "Cidade Tiradentes", "82", "b")
         val usuarioId = 1
@@ -71,7 +75,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve listar endereços de um usuário com sucesso")
+    @DisplayName("deve listar endereços de um usuário com sucesso")
     fun listarEnderecosSucesso() {
         val usuarioId = 1
         val usuario = Usuario(id = usuarioId, nome = "Enzo")
@@ -106,7 +110,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao tentar listar endereços de usuário inexistente")
+    @DisplayName("deve lançar exceção ao tentar listar endereços de usuário inexistente")
     fun listarEnderecosUsuarioInexistente() {
         val usuarioId = 1
 
@@ -120,7 +124,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve encontrar endereço por ID com sucesso")
+    @DisplayName("deve encontrar endereço por ID com sucesso")
     fun acharPorIdSucesso() {
         val usuarioId = 1
         val enderecoId = 1
@@ -150,7 +154,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao tentar encontrar endereço por ID inexistente")
+    @DisplayName("deve lançar exceção ao tentar encontrar endereço por ID inexistente")
     fun acharPorIdInexistente() {
         val usuarioId = 1
         val enderecoId = 1
@@ -167,7 +171,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar endereço com sucesso")
+    @DisplayName("deve atualizar endereço com sucesso")
     fun atualizarEnderecoSucesso() {
         val usuarioId = 1
         val enderecoId = 1
@@ -207,7 +211,7 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve lançar exceção ao tentar atualizar endereço de usuário inexistente")
+    @DisplayName("deve lançar exceção ao tentar atualizar endereço de usuário inexistente")
     fun atualizarEnderecoUsuarioInexistente() {
         val usuarioId = 1
         val enderecoId = 1
@@ -231,12 +235,12 @@ class EnderecoServicoTest {
     }
 
     @Test
-    @DisplayName("Deve deletar endereço com sucesso")
-    fun deletarEnderecoSucesso() {
+    @DisplayName("deve lançar exceção ao tentar atualizar endereço inexistente")
+    fun atualizarEnderecoInexistente() {
         val usuarioId = 1
         val enderecoId = 1
         val usuario = Usuario(id = usuarioId, nome = "Enzo")
-        val endereco = Endereco(
+        val enderecoAtualizado = Endereco(
             id = enderecoId,
             cep = "96969696",
             rua = "Hadock",
@@ -247,25 +251,10 @@ class EnderecoServicoTest {
         )
 
         `when`(usuarioServico.acharPorId(usuarioId)).thenReturn(usuario)
-        `when`(enderecoRepositorio.findById(enderecoId)).thenReturn(Optional.of(endereco))
-
-        enderecoServico.deletarPorId(enderecoId, usuarioId)
-
-        verify(enderecoRepositorio, times(1)).deleteById(enderecoId)
-    }
-
-    @Test
-    @DisplayName("Deve lançar exceção ao tentar deletar endereço por ID inexistente")
-    fun deletarEnderecoIdInexistente() {
-        val usuarioId = 1
-        val enderecoId = 1
-        val usuario = Usuario(id = usuarioId, nome = "Enzo")
-
-        `when`(usuarioServico.acharPorId(usuarioId)).thenReturn(usuario)
         `when`(enderecoRepositorio.findById(enderecoId)).thenReturn(Optional.empty())
 
         val excecao = assertThrows(NaoEncontradoPorIdExcecao::class.java) {
-            enderecoServico.deletarPorId(enderecoId, usuarioId)
+            enderecoServico.atualizar(enderecoId, enderecoAtualizado, usuarioId)
         }
 
         assertNotNull(excecao)
