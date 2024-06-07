@@ -26,4 +26,18 @@ class TipoServico(
 
         return listaTipos
     }
+
+    fun buscarPorId(idTipo:Int):Tipo{
+        val tipo:Tipo = super.acharPorId(idTipo);
+
+        return tipo
+    }
+
+    /*
+    fun atualizarTipo(id:Int, dto: TipoCadastro):Tipo{
+        val tipo: Tipo = mapper.map(dto, Tipo::class.java)
+
+        return super.atualizar(id, tipo)
+    }
+     */
 }
