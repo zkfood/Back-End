@@ -12,7 +12,7 @@ import zkfood.pedidosapi.produtos.produtoDado.Produto
 class AvaliacaoControlador (
     val avaliacaoServico: AvaliacaoServico
 ){
-    @PatchMapping("/produto/{idProduto}/usuario/{idUsuario}")
+    @PatchMapping("/usuario/{idUsuario}/produto/{idProduto}")
     fun cadastrarOuAtualiazar(
         @PathVariable idProduto: Int,
         @PathVariable idUsuario: Int,
