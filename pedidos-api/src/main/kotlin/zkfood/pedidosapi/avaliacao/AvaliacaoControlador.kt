@@ -4,26 +4,22 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.Avaliacao
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoCadastro
+import zkfood.pedidosapi.avaliacao.dto.AvaliacaoDTO
+import zkfood.pedidosapi.produtos.produtoDado.Produto
 
 @RestController
 @RequestMapping("/avaliacoes")
 class AvaliacaoControlador (
     val avaliacaoServico: AvaliacaoServico
 ){
-    @PatchMapping
-    fun cadastrarOuAtualiazar(@RequestBody avaliacaoCadastro: AvaliacaoCadastro):ResponseEntity<Avaliacao>{
-        val avaliacao = avaliacaoServico.cadastrarOuAtualiazar(
-            avaliacaoCadastro.usuarioId,
-            avaliacaoCadastro.produtoId,
-            avaliacaoCadastro.favorito,
-            avaliacaoCadastro.qtdEstrelas,
-            avaliacaoCadastro.descricao
-        )
-        return if (avaliacao != null){
-             ResponseEntity.status(200).body(avaliacao)
-        } else {
-            return ResponseEntity.status(201).body(avaliacao)
-        }
+    @PatchMapping("/produto/{idProduto}/usuario/{idUsuario}")
+    fun cadastrarOuAtualiazar(
+        @PathVariable idProduto: Int,
+        @PathVariable idUsuario: Int,
+        @RequestBody avaliacaoDTO: AvaliacaoDTO
+    ): ResponseEntity<Avaliacao> {
+        val avaliacao = avaliacaoServico.cadastrarOuAtualiazar(idProduto, idUsuario, avaliacaoDTO)
+        return ResponseEntity.ok(avaliacao)
     }
 
     @GetMapping

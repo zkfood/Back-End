@@ -17,24 +17,25 @@ class AvaliacaoServico (
     val mapper:ModelMapper = ModelMapper()
 ){
     @Transactional
-    fun cadastrarOuAtualiazar(usuarioId: Int, produtoId:Int, favorito:Boolean, qtdEstrelas:Int, descricao:String):Avaliacao{
-        val usuario = usuarioRepositorio.findById(usuarioId).orElseThrow{RuntimeException("Usuário não encontrado")}
-        val produto = produtoRepositorio.findById(produtoId).orElseThrow{RuntimeException("Produto não encontrado")}
+    fun cadastrarOuAtualiazar(idProduto: Int, idUsuario: Int, avaliacaoDTO: AvaliacaoDTO): Avaliacao {
+        val usuario = usuarioRepositorio.findById(idUsuario).orElseThrow { RuntimeException("Usuário não encontrado") }
+        val produto = produtoRepositorio.findById(idProduto).orElseThrow { RuntimeException("Produto não encontrado") }
 
-        val avaliacaoId = AvaliacaoId(usuarioId,produtoId)
+        val avaliacaoId = AvaliacaoId(usuario.id!!, produto.id!!)
         val avaliacaoExistente = avaliacaoRepositorio.findById(avaliacaoId)
 
-        val avaliacao = avaliacaoExistente.orElseGet{
+        val avaliacao = avaliacaoExistente.orElseGet {
             Avaliacao(
                 usuarioId = usuario.id!!,
                 produtoId = produto.id!!
             )
         }
 
-        mapper.map(AvaliacaoDTO(favorito, qtdEstrelas, descricao), avaliacao)
-        avaliacaoRepositorio.save(avaliacao)
+        // Mapear os valores do DTO para o objeto existente
+        mapper.map(avaliacaoDTO, avaliacao)
 
-        return avaliacao
+        // Salvar a avaliação no banco de dados
+        return avaliacaoRepositorio.save(avaliacao)
     }
 
     fun listarAvaliacoes(): List<Avaliacao> {

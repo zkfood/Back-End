@@ -25,4 +25,6 @@ data class Avaliacao(
 
     @field:Size(min = 5, max = 255)
     var descricao: String? = null
-)
+){
+    constructor() : this(0, 0, false, null, null)
+}
