@@ -5,4 +5,5 @@ import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UsuarioRepositorio : JpaRepository<Usuario, Int>
+interface UsuarioRepositorio : JpaRepository<Usuario, Int> {
+}
