@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
-import zkfood.pedidosapi.produtos.tipo.tipoDado.Tipo
+import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProdudo
 
 @Entity
 data class Produto (
@@ -14,14 +14,17 @@ data class Produto (
 
     var nome:String? = null,
 
-    @field:ManyToOne
-    var tipo:Tipo? = null,
-
-    var disponibilidade:Boolean = false,
+    var disponibilidade:Boolean? = null,
 
     var descricao:String? = null,
 
-    var valorUnitario:Double? = null,
+    var valor:Double? = null,
 
-    var qtdPessoas:Int? = null
+    var qtdPessoas:String? = null,
+
+//    @field:ManyToOne
+    var tipoProduto:Int? = null,
+
+    // TODO: Ajustar imagem aq
+    var imagem:String? = null
 )

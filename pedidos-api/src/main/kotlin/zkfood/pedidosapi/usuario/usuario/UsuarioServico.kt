@@ -95,7 +95,7 @@ class UsuarioServico(
         val usuario:Usuario = super.listarEntidade(filtro, IgnorarFormatacaoEnum.INATIVO)[0];
 
         usuario.autenticado = true
-        this.atualizar(usuario.id!!, usuario)
+        super.atualizar(usuario.id!!, usuario)
 
         return usuario;
     }

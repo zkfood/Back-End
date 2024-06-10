@@ -1,4 +1,4 @@
-package zkfood.pedidosapi.produtos.tipo.tipoDado
+package zkfood.pedidosapi.produtos.tipoProduto.tipoDado
 
 import jakarta.validation.constraints.NotBlank
 
