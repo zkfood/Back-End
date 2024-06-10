@@ -10,7 +10,6 @@ import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.nucleo.erros.EntidadeImprocessavelExcecao
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.nucleo.utilidade.ListaUtil
-import zkfood.pedidosapi.produtos.tipo.tipoDado.TipoCadastro
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -88,7 +87,7 @@ abstract class CrudServico<T : Any>(
         return cadastro;
     }
     fun atualizar(id:Int, dto: T):T {
-        val entidade:T = acharPorId(id);
+        val entidade:T = this.acharPorId(id);
         val classe:Class<*>?= getEntidade(entidade).classe;
 
         for (propriedade in classe!!.kotlin.memberProperties) {

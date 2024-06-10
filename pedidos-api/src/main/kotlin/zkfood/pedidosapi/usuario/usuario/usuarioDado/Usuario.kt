@@ -22,5 +22,5 @@ data class Usuario (
 
     var cpf: String? = null,
 
-    var autenticado: Boolean = false,
+    var autenticado: Boolean? = null
 )
