@@ -21,6 +21,8 @@ data class PedidoCompletoResposta (
 
     var formaPagamento:String? = null,
 
+    var motivoCancelamento: String? = null,
+
     var tipoEntrega:String? = null,
 
     var usuario:UsuarioSimplesRespostaDto? = null,
