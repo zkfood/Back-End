@@ -18,6 +18,8 @@ data class Pedido (
 
     var formaPagamento:String? = null,
 
+    var motivoCancelamento:String? = null,
+
     var tipoEntrega:String? = null,
 
     var usuario:Int? = null,
