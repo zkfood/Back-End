@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProdudo
+import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProduto
 import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoCadastro
 
 @RestController
@@ -19,29 +19,29 @@ class TipoProdutoControlador (
     val tipoProdutoServico: TipoProdutoServico
 ){
     @PostMapping
-    fun cadastrar(@RequestBody @Valid tipoCadastro: TipoCadastro):ResponseEntity<TipoProdudo>{
-        val novoTipoProdudo:TipoProdudo = tipoProdutoServico.cadastrar(tipoCadastro);
+    fun cadastrar(@RequestBody @Valid tipoCadastro: TipoCadastro):ResponseEntity<TipoProduto>{
+        val novoTipoProduto:TipoProduto = tipoProdutoServico.cadastrar(tipoCadastro);
 
-        return ResponseEntity.status(201).body(novoTipoProdudo);
+        return ResponseEntity.status(201).body(novoTipoProduto);
     }
 
     @GetMapping
-    fun listar():ResponseEntity<List<TipoProdudo>>{
+    fun listar():ResponseEntity<List<TipoProduto>>{
         val lista = tipoProdutoServico.listarEntidade(null, null);
 
         return ResponseEntity.status(200).body(lista);
     }
 
     @GetMapping("/{id}")
-    fun buscarPorId(@PathVariable id:Int):ResponseEntity<TipoProdudo>{
-        val tipoProdudo: TipoProdudo = tipoProdutoServico.acharPorId(id);
+    fun buscarPorId(@PathVariable id:Int):ResponseEntity<TipoProduto>{
+        val tipoProduto: TipoProduto = tipoProdutoServico.acharPorId(id);
 
-        return ResponseEntity.status(200).body(tipoProdudo);
+        return ResponseEntity.status(200).body(tipoProduto);
     }
 
     @PatchMapping("/{id}")
-    fun atualizarTipo(@PathVariable id:Int, @RequestBody tipoProdudo: TipoProdudo):ResponseEntity<TipoProdudo>{
-        val atualizado: TipoProdudo = tipoProdutoServico.atualizar(id, tipoProdudo);
+    fun atualizarTipo(@PathVariable id:Int, @RequestBody tipoProduto: TipoProduto):ResponseEntity<TipoProduto>{
+        val atualizado: TipoProduto = tipoProdutoServico.atualizar(id, tipoProduto);
 
         return ResponseEntity.status(200).body(atualizado);
     }

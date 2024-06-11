@@ -54,4 +54,19 @@ class ProdutoControlador (
 
         return ResponseEntity.status(200).body(produtoAtualizado);
     }
+
+    @PatchMapping(value = ["/imagem/{id}"], consumes = ["image/*"], produces = ["image/jpeg"])
+//        consumes = ["image/jpeg", "image/png", "image/gif"])
+    fun cadastrarImagem (@PathVariable id: Int, @RequestBody novaImagem: ByteArray):ResponseEntity<Void> {
+        produtoServico.cadastrarImagem(id, novaImagem);
+
+        return ResponseEntity.status(204).build();
+    }
+
+    @GetMapping(value = ["/imagem/{id}"], produces = ["image/jpeg"])
+    fun recuperarImagem(@PathVariable id:Int):ResponseEntity<ByteArray> {
+        val imagem = produtoServico.recuperarImagem(id);
+
+        return ResponseEntity.status(200).body(imagem);
+    }
 }

@@ -20,7 +20,4 @@ data class ProdutoCadastro (
     var tipoProduto:Int,
 
     var disponibilidade: Boolean = true,
-
-    // TODO: Ajustar foto aq
-    var imagem: String? = null
 )

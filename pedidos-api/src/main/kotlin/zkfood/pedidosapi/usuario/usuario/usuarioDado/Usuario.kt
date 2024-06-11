@@ -1,11 +1,7 @@
 package zkfood.pedidosapi.usuario.usuario.usuarioDado
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
 import zkfood.pedidosapi.usuario.telefone.telefoneDado.Telefone
 
 @Entity
@@ -20,6 +16,7 @@ data class Usuario (
     @JsonIgnore
     var senha: String? = null,
 
+    @Column(name = "cpf", columnDefinition = "CHAR(11)")
     var cpf: String? = null,
 
     var autenticado: Boolean? = null

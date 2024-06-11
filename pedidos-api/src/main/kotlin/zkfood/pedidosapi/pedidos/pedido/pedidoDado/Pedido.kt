@@ -1,9 +1,6 @@
 package zkfood.pedidosapi.pedidos.pedido.pedidoDado
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class Pedido (
@@ -12,6 +9,7 @@ data class Pedido (
 
     var estado:String? = null,
 
+    @Column(name = "numero_mesa", columnDefinition = "CHAR(3)")
     var numeroMesa:String? = null,
 
     var delivery:Double? = null,
@@ -22,11 +20,14 @@ data class Pedido (
 
     var tipoEntrega:String? = null,
 
+    @Column(name = "usuario_id")
     var usuario:Int? = null,
 
-    var colaborador:Int? = null,
+//    var colaborador:Int? = null,
 
+    @Column(name = "telefone_id")
     var telefone:Int? = null,
 
+    @Column(name = "endereco_id")
     var endereco:Int? = null
 )

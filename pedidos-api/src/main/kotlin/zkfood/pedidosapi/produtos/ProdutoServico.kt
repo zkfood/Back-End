@@ -7,7 +7,6 @@ import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
 import zkfood.pedidosapi.produtos.produtoDado.Produto
 import zkfood.pedidosapi.produtos.produtoDado.ProdutoCadastro
 import zkfood.pedidosapi.produtos.tipoProduto.TipoProdutoServico
-import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProdudo
 
 @Service
 class ProdutoServico (
@@ -32,5 +31,15 @@ class ProdutoServico (
         val listaProdutos: List<Produto> = super.listarEntidade(filtro, IgnorarFormatacaoEnum.INATIVO);
 
         return listaProdutos;
+    }
+
+    fun cadastrarImagem(id: Int, novaImagem: ByteArray) {
+        super.atualizar(id, Produto(imagem = novaImagem));
+    }
+
+    fun recuperarImagem(id:Int):ByteArray {
+        val imagem = produtoRepositorio.recuperarImagem(id);
+
+        return imagem;
     }
 }

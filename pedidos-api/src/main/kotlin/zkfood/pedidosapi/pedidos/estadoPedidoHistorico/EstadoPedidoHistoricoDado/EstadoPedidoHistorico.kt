@@ -1,9 +1,12 @@
 package zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoDado
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
+import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
 import java.time.LocalDateTime
 
 @Entity
@@ -15,5 +18,6 @@ data class EstadoPedidoHistorico(
 
     var hora: LocalDateTime? = null,
 
+    @Column(name = "pedido_id")
     var pedido: Int? = null
 )

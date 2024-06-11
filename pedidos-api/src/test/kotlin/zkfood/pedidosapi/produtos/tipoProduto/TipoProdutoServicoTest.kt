@@ -7,10 +7,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.mockito.Mockito.*
 import org.modelmapper.ModelMapper
-import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProdudo
+import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProduto
 import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoCadastro
 
-class TipoProdudoServicoTest {
+class TipoProdutoServicoTest {
 
     lateinit var tipoProdutoServico: TipoProdutoServico
     lateinit var mapper:ModelMapper
@@ -27,10 +27,10 @@ class TipoProdudoServicoTest {
     fun cadastrar() {
         val tipoCadastro = TipoCadastro(nome = "Comida")
 
-        `when`(tipoProdutoRepositorio.save(any(TipoProdudo::class.java))).thenAnswer{
-            invocation -> val tipoProdudo = invocation.getArgument<TipoProdudo>(0)
-            tipoProdudo.id = 1
-            tipoProdudo
+        `when`(tipoProdutoRepositorio.save(any(TipoProduto::class.java))).thenAnswer{
+            invocation -> val tipoProduto = invocation.getArgument<TipoProduto>(0)
+            tipoProduto.id = 1
+            tipoProduto
         }
 
         val resultado = tipoProdutoServico.cadastrar(tipoCadastro)
@@ -41,9 +41,9 @@ class TipoProdudoServicoTest {
     @Test
     @DisplayName("Listagem de tipos")
     fun listar() {
-        val tipoProdudo1 = TipoProdudo(id = 1, nome = "Tipo 1")
-        val tipoProdudo2 = TipoProdudo(id = 2, nome = "Tipo 2")
-        val tipos = listOf(tipoProdudo1, tipoProdudo2)
+        val tipoProduto1 = TipoProduto(id = 1, nome = "Tipo 1")
+        val tipoProduto2 = TipoProduto(id = 2, nome = "Tipo 2")
+        val tipos = listOf(tipoProduto1, tipoProduto2)
 
         `when`(tipoProdutoRepositorio.findAll()).thenReturn(tipos)
 

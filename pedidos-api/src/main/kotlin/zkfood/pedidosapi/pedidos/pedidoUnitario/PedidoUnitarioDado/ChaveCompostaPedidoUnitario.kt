@@ -1,9 +1,14 @@
 package zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado
 
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 import java.io.Serializable
 
+@Embeddable
 data class ChaveCompostaPedidoUnitario(
-    var idPedido: Int? = null,
+    @Column(name = "pedido_id")
+    var pedido: Int? = null,
 
-    var idProduto: Int? = null,
+    @Column(name = "produto_id")
+    var produto: Int? = null,
 ): Serializable

@@ -16,8 +16,11 @@ class PedidoUnitarioServico(
         val listaProdutosRetorno:MutableList<PedidoUnitario> = mutableListOf();
         listaProdutos.forEach {
             val pedidoUnitario = PedidoUnitario();
-            pedidoUnitario.idPedido = idPedido;
-            pedidoUnitario.idProduto = it.id;
+            val chaveComposta = ChaveCompostaPedidoUnitario();
+            chaveComposta.pedido = idPedido;
+            chaveComposta.produto = it.id;
+
+            pedidoUnitario.id = chaveComposta;
             pedidoUnitario.quantidade = it.quantidade;
             pedidoUnitario.observacao = it.observacao;
 
@@ -35,7 +38,7 @@ class PedidoUnitarioServico(
     }
 
     fun atualizar(dto: PedidoUnitario): PedidoUnitario {
-        val chaveCompostaPedidoUnitario = ChaveCompostaPedidoUnitario(idPedido = dto.idPedido, idProduto = dto.idProduto);
+        val chaveCompostaPedidoUnitario = ChaveCompostaPedidoUnitario(pedido = dto.id!!.pedido, produto = dto.id!!.produto);
         val entidade = pedidoUnitarioRepositorio.findById(chaveCompostaPedidoUnitario).get();
 
         entidade.quantidade = dto.quantidade;

@@ -27,7 +27,7 @@ data class PedidoCompletoResposta (
 
     var usuario:UsuarioSimplesRespostaDto? = null,
 
-    var colaborador:UsuarioSimplesRespostaDto? = null,
+//    var colaborador:UsuarioSimplesRespostaDto? = null,
 
     var telefone: TelefoneSimplesRespostaDto? = null,
 

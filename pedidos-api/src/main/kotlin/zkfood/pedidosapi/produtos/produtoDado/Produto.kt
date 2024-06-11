@@ -1,11 +1,7 @@
 package zkfood.pedidosapi.produtos.produtoDado
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
-import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProdudo
+import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.persistence.*
 
 @Entity
 data class Produto (
@@ -22,9 +18,10 @@ data class Produto (
 
     var qtdPessoas:String? = null,
 
-//    @field:ManyToOne
+    @Column(name = "tipo_produto_id")
     var tipoProduto:Int? = null,
 
-    // TODO: Ajustar imagem aq
-    var imagem:String? = null
+    @field:Column(length = 10 * 1024 * 1024)
+    @field:JsonIgnore
+    var imagem:ByteArray? = null
 )
