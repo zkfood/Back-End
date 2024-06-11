@@ -99,16 +99,15 @@ class PedidoServico(
     ):MutableList<ProdutoSimplesRespostaDto>? {
         listaProdutos.forEach {
             val produtoRetorno = ProdutoSimplesRespostaDto();
-            val produto = produtoServico.acharPorId(it.idProduto!!);
+            val produto = produtoServico.acharPorId(it.id!!.produto!!);
 
-            produtoRetorno.id = it.idProduto!!;
+            produtoRetorno.id = it.id!!.produto!!;
             produtoRetorno.quantidade = it.quantidade;
             produtoRetorno.observacao = it.observacao;
             produtoRetorno.nome = produto.nome;
             produtoRetorno.valor = produto.valor;
             produtoRetorno.descricao = produto.descricao;
             produtoRetorno.qtdPessoas = produto.qtdPessoas;
-            produtoRetorno.imagem = produto.imagem;
 
             pedidoRetorno.produtos = mutableListOf();
             pedidoRetorno.produtos!!.add(produtoRetorno);

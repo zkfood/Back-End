@@ -26,8 +26,10 @@ class AvaliacaoServico (
 
         val avaliacao = avaliacaoExistente.orElseGet {
             Avaliacao(
-                usuarioId = usuario.id!!,
-                produtoId = produto.id!!
+                id = AvaliacaoId(
+                    usuario = usuario.id!!,
+                    produto = produto.id!!
+                )
             )
         }
 
@@ -43,7 +45,7 @@ class AvaliacaoServico (
     }
 
     fun listarAvaliacaoPorUsuario(usuarioId: Int):List<Avaliacao>{
-        return avaliacaoRepositorio.findAll().filter { it.usuarioId == usuarioId }
+        return avaliacaoRepositorio.findAll().filter { it.id!!.usuario == usuarioId }
     }
 
     fun listarAvaliacaoPorId(usuarioId: Int, produtoId: Int): Avaliacao? {

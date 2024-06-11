@@ -9,7 +9,7 @@ abstract class PedidoValidador {
         fun validarIds(pedidoCadastro: PedidoCadastro) {
             if (
                 pedidoCadastro.usuario == null &&
-                pedidoCadastro.colaborador == null &&
+//                pedidoCadastro.colaborador == null &&
                 pedidoCadastro.endereco == null &&
                 pedidoCadastro.telefone == null
             ) throw ResponseStatusException(HttpStatusCode.valueOf(204));

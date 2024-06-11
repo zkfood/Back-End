@@ -1,5 +1,6 @@
 package zkfood.pedidosapi.usuario.endereco.enderecoDado
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -12,6 +13,7 @@ data class Endereco(
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     var id:Int? = null,
 
+    @Column(name = "cep", columnDefinition = "CHAR(9)")
     var cep:String? = null,
 
     var rua:String? = null,

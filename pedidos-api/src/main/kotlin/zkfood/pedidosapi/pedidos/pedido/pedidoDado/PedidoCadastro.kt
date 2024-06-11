@@ -21,7 +21,7 @@ data class PedidoCadastro(
 
     var usuario:Int? = null,
 
-    var colaborador:Int? = null,
+//    var colaborador:Int? = null,
 
     var telefone:Int? = null,
 

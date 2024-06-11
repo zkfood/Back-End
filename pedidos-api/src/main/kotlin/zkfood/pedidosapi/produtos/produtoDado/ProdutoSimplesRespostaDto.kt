@@ -9,9 +9,6 @@ data class ProdutoSimplesRespostaDto(
 
     var nome: String? = null,
 
-    // TODO: Ajustar imagem aq
-    var imagem: String? = null,
-
     var valor: Double? = null,
 
     var qtdPessoas:String? = null,
