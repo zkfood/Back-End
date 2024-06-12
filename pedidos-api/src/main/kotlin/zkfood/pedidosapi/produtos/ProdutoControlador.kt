@@ -1,7 +1,6 @@
 package zkfood.pedidosapi.produtos
 
 import jakarta.validation.Valid
-import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -55,7 +54,7 @@ class ProdutoControlador (
         return ResponseEntity.status(200).body(produtoAtualizado);
     }
 
-    @PatchMapping(value = ["/imagem/{id}"], consumes = ["image/*"], produces = ["image/jpeg"])
+    @PatchMapping(value = ["/imagem/{id}"], consumes = ["image/*"])
 //        consumes = ["image/jpeg", "image/png", "image/gif"])
     fun cadastrarImagem (@PathVariable id: Int, @RequestBody novaImagem: ByteArray):ResponseEntity<Void> {
         produtoServico.cadastrarImagem(id, novaImagem);

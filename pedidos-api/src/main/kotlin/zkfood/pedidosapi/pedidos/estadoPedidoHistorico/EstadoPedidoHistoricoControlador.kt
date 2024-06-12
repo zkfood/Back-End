@@ -12,6 +12,7 @@ import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoDado
 class EstadoPedidoHistoricoControlador(
     val estadoPedidoHistoricoServico: EstadoPedidoHistoricoServico
 ) {
+    // TODO: colocar isso no domínio de pedidos
     @PatchMapping
     fun atualizar(@RequestBody estadoPedidoHistorico: EstadoPedidoHistorico): ResponseEntity<EstadoPedidoHistorico> {
         val pedidoAtualizado = estadoPedidoHistoricoServico.atualizar(estadoPedidoHistorico);

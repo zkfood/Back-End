@@ -12,7 +12,7 @@ import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.PedidoUnitari
 class PedidoUnitarioControlador(
     val pedidoUnitarioServico: PedidoUnitarioServico
 ) {
-    // TODO: Rever esse método, parece não estar funcionando
+    // TODO: colocar isso no domínio de pedidos
     @PatchMapping
     fun atualizar(@RequestBody pedidoUnitario: PedidoUnitario): ResponseEntity<PedidoUnitario> {
         val pedidoAtualizado = pedidoUnitarioServico.atualizar(pedidoUnitario);
