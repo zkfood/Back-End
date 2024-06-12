@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+// TODO: Refatorar esse serviço completamente para cada view usar uma repository e mudar o nome crm
 @RestController
 @RequestMapping("/crm")
 class CrmControlador (
