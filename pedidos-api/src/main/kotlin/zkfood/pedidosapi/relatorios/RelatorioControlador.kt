@@ -1,4 +1,4 @@
-package zkfood.pedidosapi.crm
+package zkfood.pedidosapi.relatorios
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.RestController
 // TODO: Refatorar esse serviço completamente para cada view usar uma repository e mudar o nome crm
 @RestController
 @RequestMapping("/crm")
-class CrmControlador (
-    val crmServico: CrmServico
+class RelatorioControlador (
+    val relatorioServico: RelatorioServico
 ) {
     @GetMapping("/dashboard-produtos")
     fun dashboardProdutos(): ResponseEntity<List<Any>> {
-        val listaDashboardProdutos = crmServico.dashboardProdutos();
+        val listaDashboardProdutos = relatorioServico.dashboardProdutos();
 
         return ResponseEntity.status(200).body(listaDashboardProdutos);
     }
 
     @GetMapping("/kpis-produtos")
     fun kpisProdutos(): ResponseEntity<Any> {
-        val listaDashboardProdutos = crmServico.kpisProdutos();
+        val listaDashboardProdutos = relatorioServico.kpisProdutos();
 
         return ResponseEntity.status(200).body(listaDashboardProdutos);
     }
