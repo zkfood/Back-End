@@ -1,4 +1,4 @@
--- INSERT INTO tipo_produdo (nome) VALUES
+-- INSERT INTO tipo_produto (nome) VALUES
 --     ('Pratos'),
 --     ('Porções'),
 --     ('Bebidas');
