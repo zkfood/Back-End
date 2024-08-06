@@ -1,15 +1,12 @@
-package zkfood.pedidosapi.crm
+package zkfood.pedidosapi.relatorios
 
 import org.modelmapper.ModelMapper
-import org.modelmapper.TypeToken
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.dtos.DashboardProdutosRespostaDto
-import zkfood.pedidosapi.nucleo.dtos.KpisProdutosRespostaDto
 import zkfood.pedidosapi.nucleo.utilidade.ListaUtil
 import zkfood.pedidosapi.produtos.ProdutoRepositorio
 
 @Service
-class CrmServico(
+class RelatorioServico(
     val produtosRepositorio: ProdutoRepositorio,
     val mapper: ModelMapper
 ) {
