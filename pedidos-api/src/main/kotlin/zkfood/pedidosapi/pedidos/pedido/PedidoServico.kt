@@ -39,7 +39,7 @@ class PedidoServico(
         val pedidoResposta = mapper.map(pedido, PedidoCompletoResposta::class.java);
         val listaProdutos = pedidoUnitarioServico.listarPedidoUnitario(id);
         val listaEstadoPedidoHistorico = estadoPedidoHistoricoServico.listarEstadoPedidoHistorico(id);
-        pedidoResposta.estado = listaEstadoPedidoHistorico.last().estado
+        pedidoResposta.estado = listaEstadoPedidoHistorico.last().estado;
 
         pedidoResposta.produtos = conversorDeProdutos(pedidoResposta, listaProdutos);
         pedidoResposta.estadoPedidoHistorico = conversorDeEstadoPedidoHistorico(pedidoResposta, listaEstadoPedidoHistorico);

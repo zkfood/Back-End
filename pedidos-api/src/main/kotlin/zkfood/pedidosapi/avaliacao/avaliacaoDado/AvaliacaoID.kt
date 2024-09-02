@@ -7,8 +7,8 @@ import java.io.Serializable
 @Embeddable
 data class AvaliacaoId(
     @Column(name = "usuario_id")
-    var usuario: Int = 0,
+    var usuario: Int? = null,
 
     @Column(name = "produto_id")
-    var produto: Int = 0
+    var produto: Int? = null
 ) : Serializable

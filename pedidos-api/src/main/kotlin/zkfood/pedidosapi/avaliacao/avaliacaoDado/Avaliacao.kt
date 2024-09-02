@@ -5,7 +5,7 @@ import jakarta.persistence.*
 @Entity
 data class Avaliacao(
     @EmbeddedId
-    val id:AvaliacaoId? = null,
+    var id:AvaliacaoId? = null,
 
     var favorito: Boolean = false,
 

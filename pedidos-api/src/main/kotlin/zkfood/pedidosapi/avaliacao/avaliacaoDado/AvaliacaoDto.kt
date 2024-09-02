@@ -2,21 +2,19 @@ package zkfood.pedidosapi.avaliacao.avaliacaoDado
 
 import jakarta.validation.constraints.NotBlank
 
-data class AvaliacaoCadastro(
+data class AvaliacaoDto(
     @field:NotBlank
-    var usuarioId: Int,
+    var usuario: Int? = null,
 
     @field:NotBlank
-    var produtoId: Int,
+    var produto: Int? = null,
 
     @field:NotBlank
-    var favorito: Boolean,
+    var favorito: Boolean? = null,
 
     @field:NotBlank
-    var qtdEstrelas: Int,
+    var qtdEstrelas: Int? = null,
 
     @field:NotBlank
-    var descricao: String
-){
-
-}
+    var descricao: String? = null
+)
