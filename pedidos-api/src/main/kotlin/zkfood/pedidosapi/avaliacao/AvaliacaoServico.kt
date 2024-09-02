@@ -2,57 +2,83 @@ package zkfood.pedidosapi.avaliacao
 
 import jakarta.transaction.Transactional
 import org.modelmapper.ModelMapper
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.Avaliacao
+import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoDto
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoId
-import zkfood.pedidosapi.avaliacao.dto.AvaliacaoDTO
 import zkfood.pedidosapi.produtos.ProdutoRepositorio
+import zkfood.pedidosapi.produtos.ProdutoServico
 import zkfood.pedidosapi.usuario.usuario.UsuarioRepositorio
+import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 
 @Service
 class AvaliacaoServico (
     val avaliacaoRepositorio: AvaliacaoRepositorio,
-    val usuarioRepositorio: UsuarioRepositorio,
-    val produtoRepositorio: ProdutoRepositorio,
+    val usuarioServico: UsuarioServico,
+    val produtoServico: ProdutoServico,
     val mapper:ModelMapper = ModelMapper()
 ){
     @Transactional
-    fun cadastrarOuAtualiazar(idProduto: Int, idUsuario: Int, avaliacaoDTO: AvaliacaoDTO): Avaliacao {
-        val usuario = usuarioRepositorio.findById(idUsuario).orElseThrow { RuntimeException("Usuário não encontrado") }
-        val produto = produtoRepositorio.findById(idProduto).orElseThrow { RuntimeException("Produto não encontrado") }
+    fun salvar(novaAvaliacao: AvaliacaoDto): Avaliacao {
+        usuarioServico.acharPorId(novaAvaliacao.usuario!!);
+        produtoServico.acharPorId(novaAvaliacao.produto!!);
 
-        val avaliacaoId = AvaliacaoId(usuario.id!!, produto.id!!)
-        val avaliacaoExistente = avaliacaoRepositorio.findById(avaliacaoId)
+        val avaliacaoId = AvaliacaoId(novaAvaliacao.usuario, novaAvaliacao.produto);
+        val avaliacaoExistente = avaliacaoRepositorio.findById(avaliacaoId);
 
         val avaliacao = avaliacaoExistente.orElseGet {
-            Avaliacao(
-                id = AvaliacaoId(
-                    usuario = usuario.id!!,
-                    produto = produto.id!!
-                )
-            )
+            Avaliacao(id = avaliacaoId);
         }
 
-        // Mapear os valores do DTO para o objeto existente
-        mapper.map(avaliacaoDTO, avaliacao)
+        avaliacao.favorito = novaAvaliacao.favorito ?: avaliacao.favorito;
+        avaliacao.qtdEstrelas = novaAvaliacao.qtdEstrelas ?: avaliacao.qtdEstrelas;
+        avaliacao.descricao = novaAvaliacao.descricao ?: avaliacao.descricao;
 
-        // Salvar a avaliação no banco de dados
         return avaliacaoRepositorio.save(avaliacao)
     }
 
-    fun listarAvaliacoes(): List<Avaliacao> {
-        return avaliacaoRepositorio.findAll()
+    fun listarAvaliacoes(filtro: AvaliacaoDto): List<Avaliacao> {
+        val combinador: ExampleMatcher = ExampleMatcher.matching();
+
+        val avaliacao = Avaliacao();
+        val avaliacaoId = AvaliacaoId();
+
+        if (filtro.favorito != null) {
+            combinador.withMatcher("favorito", ExampleMatcher.GenericPropertyMatchers.contains());
+            avaliacao.favorito = filtro.favorito!!;
+        }
+        if (filtro.qtdEstrelas != null) {
+            combinador.withMatcher("qtdEstrelas", ExampleMatcher.GenericPropertyMatchers.contains());
+            avaliacao.qtdEstrelas = filtro.qtdEstrelas;
+        }
+        if (filtro.descricao != null) {
+            combinador.withMatcher("descricao", ExampleMatcher.GenericPropertyMatchers.contains());
+            avaliacao.descricao = filtro.descricao;
+        }
+        if (filtro.usuario != null) {
+            combinador.withMatcher("id.usuario", ExampleMatcher.GenericPropertyMatchers.exact())
+            avaliacaoId.usuario = filtro.usuario
+        }
+        if (filtro.produto != null) {
+            combinador.withMatcher("id.produto", ExampleMatcher.GenericPropertyMatchers.exact())
+            avaliacaoId.produto = filtro.produto
+        }
+
+        avaliacao.id = avaliacaoId
+
+        val exemplo: Example<Avaliacao> = Example.of(avaliacao, combinador);
+
+        return avaliacaoRepositorio.findAll(exemplo);
     }
 
-    fun listarAvaliacaoPorUsuario(usuarioId: Int):List<Avaliacao>{
-        return avaliacaoRepositorio.findAll().filter { it.id!!.usuario == usuarioId }
-    }
+    fun deletar(usuario: Int, produto: Int) {
+        val avaliacaoId = AvaliacaoId(
+            usuario = usuario,
+            produto = produto
+        );
 
-    fun listarAvaliacaoPorId(usuarioId: Int, produtoId: Int): Avaliacao? {
-        return avaliacaoRepositorio.findById(AvaliacaoId(usuarioId, produtoId)).orElse(null)
-    }
-
-    fun deletar(usuarioId: Int, produtoId: Int) {
-        avaliacaoRepositorio.deleteById(AvaliacaoId(usuarioId, produtoId))
+        avaliacaoRepositorio.deleteById(avaliacaoId);
     }
 }
