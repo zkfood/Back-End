@@ -1,0 +1,6 @@
+package zkfood.pedidosapi.pedidos.estadoPedidoHistorico
+
+import org.springframework.data.jpa.repository.JpaRepository
+import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoDado.EstadoPedidoHistorico
+
+interface EstadoPedidoHistoricoRepositorio:JpaRepository<EstadoPedidoHistorico, Int>

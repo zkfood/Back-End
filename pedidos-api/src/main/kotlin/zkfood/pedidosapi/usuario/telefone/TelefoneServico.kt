@@ -12,7 +12,7 @@ import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 @Service
 class TelefoneServico(
     val telefoneRepositorio: TelefoneRepositorio,
-    val mapper:ModelMapper = ModelMapper(),
+    val mapper:ModelMapper,
     val usuarioServico: UsuarioServico
 ): CrudServico<Telefone>(telefoneRepositorio) {
     private fun validarUsuario(idUsuarioParametro:Int): Usuario{

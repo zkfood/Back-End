@@ -5,16 +5,14 @@ import org.springframework.stereotype.Service
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.Endereco
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.EnderecoCadastro
 import zkfood.pedidosapi.nucleo.CrudServico
-import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
-import zkfood.pedidosapi.usuario.telefone.telefoneDado.Telefone
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 
 @Service
 class EnderecoServico(
     val enderecoRepositorio: EnderecoRepositorio,
-    val mapper:ModelMapper = ModelMapper(),
+    val mapper:ModelMapper,
     val usuarioServico: UsuarioServico
 ): CrudServico<Endereco>(enderecoRepositorio) {
     private fun validarUsuario(idUsuarioParametro:Int): Usuario{

@@ -86,8 +86,8 @@ abstract class CrudServico<T : Any>(
 
         return cadastro;
     }
-    fun atualizar(id:Int, dto:T):T {
-        val entidade:T = acharPorId(id);
+    fun atualizar(id:Int, dto: T):T {
+        val entidade:T = this.acharPorId(id);
         val classe:Class<*>?= getEntidade(entidade).classe;
 
         for (propriedade in classe!!.kotlin.memberProperties) {

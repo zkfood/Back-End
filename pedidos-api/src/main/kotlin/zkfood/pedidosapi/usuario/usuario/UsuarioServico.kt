@@ -18,7 +18,7 @@ import java.security.SecureRandom
 class UsuarioServico(
     val usuarioRepositorio: UsuarioRepositorio,
     val enviarEmail: EnviarEmail,
-    val mapper: ModelMapper = ModelMapper()
+    val mapper: ModelMapper
 ) : CrudServico<Usuario>(usuarioRepositorio) {
     fun cadastrar(novoUsuario: UsuarioCadastro): Usuario {
         val usuarioDto: Usuario = mapper.map(novoUsuario, Usuario::class.java);
@@ -95,7 +95,7 @@ class UsuarioServico(
         val usuario:Usuario = super.listarEntidade(filtro, IgnorarFormatacaoEnum.INATIVO)[0];
 
         usuario.autenticado = true
-        this.atualizar(usuario.id!!, usuario)
+        super.atualizar(usuario.id!!, usuario)
 
         return usuario;
     }

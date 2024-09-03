@@ -1,8 +1,8 @@
 package zkfood.pedidosapi.usuario.usuario.usuarioDado
 
 import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.NotBlank
 
+// Apenas para entrada
 data class Login(
     @field:Email
     var email: String? = null,

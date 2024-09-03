@@ -8,6 +8,7 @@ data class Telefone (
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     var id:Int? = null,
 
+    @Column(name = "numero", columnDefinition = "CHAR(9)")
     var numero:String? = null,
 
     @field:ManyToOne
