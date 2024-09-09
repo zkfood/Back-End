@@ -23,7 +23,7 @@ class TelefoneControlador (
         @PathVariable idUsuario: Int,
         @RequestBody @Valid telefoneCadastro: TelefoneCadastro
     ):ResponseEntity<Telefone>{
-        val novoTelefone: Telefone = telefoneServico.cadastrar(telefoneCadastro, idUsuario);
+        val novoTelefone: Telefone = telefoneServico.cadastrarDeDTO(telefoneCadastro, idUsuario);
 
         return ResponseEntity.status(201).body(novoTelefone);
     }

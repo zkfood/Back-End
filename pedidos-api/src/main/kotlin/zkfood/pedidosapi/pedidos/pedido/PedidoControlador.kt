@@ -36,7 +36,7 @@ class PedidoControlador(
 
     @PostMapping
     fun cadastrar(@RequestBody @Valid novoPedido:PedidoCadastro):ResponseEntity<PedidoCompletoResposta>{
-        val pedido = pedidoServico.cadastrar(novoPedido);
+        val pedido = pedidoServico.cadastrarDeDTO(novoPedido);
 
         return ResponseEntity.status(201).body(pedido);
     }

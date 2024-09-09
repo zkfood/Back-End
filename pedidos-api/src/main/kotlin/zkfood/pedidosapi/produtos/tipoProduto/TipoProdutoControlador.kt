@@ -20,7 +20,7 @@ class TipoProdutoControlador (
 ){
     @PostMapping
     fun cadastrar(@RequestBody @Valid tipoCadastro: TipoCadastro):ResponseEntity<TipoProduto>{
-        val novoTipoProduto:TipoProduto = tipoProdutoServico.cadastrar(tipoCadastro);
+        val novoTipoProduto:TipoProduto = tipoProdutoServico.cadastrarDeDTO(tipoCadastro);
 
         return ResponseEntity.status(201).body(novoTipoProduto);
     }

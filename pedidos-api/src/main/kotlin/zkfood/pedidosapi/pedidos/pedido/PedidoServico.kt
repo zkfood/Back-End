@@ -10,6 +10,7 @@ import zkfood.pedidosapi.nucleo.dtos.UsuarioSimplesRespostaDto
 import zkfood.pedidosapi.nucleo.enums.EstadoPedidoEnum
 import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
 import zkfood.pedidosapi.nucleo.enums.TipoEntregaEnum
+import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoDado.EstadoPedidoHistorico
 import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoServico
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
@@ -63,19 +64,19 @@ class PedidoServico(
         return listaPedidoCompletoResposta;
     }
 
-    fun cadastrar (novoPedido: PedidoCadastro): PedidoCompletoResposta {
+    fun cadastrarDeDTO (novoPedido: PedidoCadastro): PedidoCompletoResposta {
         PedidoValidador.validarIds(novoPedido);
         TipoEntregaEnum.identificarTipo(novoPedido.tipoEntrega);
         EstadoPedidoEnum.identificarEstado("Pedido em espera");
 
         val pedido = mapper.map(novoPedido, Pedido::class.java);
-        val cadastro = super.cadastrar(pedido, null);
+        val cadastro = this.cadastrar(pedido, null);
         val cadastroRetorno = mapper.map(cadastro, PedidoCompletoResposta::class.java);
 
         val listaProdutos = pedidoUnitarioServico.cadastrar(cadastro.id!!, novoPedido.produtos);
         cadastroRetorno.produtos = conversorDeProdutos(cadastroRetorno, listaProdutos);
 
-        val listaEstadoPedidoHistorico = estadoPedidoHistoricoServico.cadastrar(cadastro.id!!);
+        val listaEstadoPedidoHistorico = estadoPedidoHistoricoServico.cadastrarDeDTO(cadastro.id!!);
         cadastroRetorno.estadoPedidoHistorico = conversorDeEstadoPedidoHistorico(cadastroRetorno, listaEstadoPedidoHistorico);
         cadastroRetorno.estado = "Pedido em espera";
 
@@ -84,6 +85,16 @@ class PedidoServico(
         cadastroRetorno.endereco = conversorDeEndereco(novoPedido.endereco);
 
         return cadastroRetorno;
+    }
+
+    override fun cadastrar(dto: Pedido, exemplo: Pedido?): Pedido {
+        if (exemplo != null) {
+            val estaDuplicado: Boolean = repositorio.exists(super.combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, super.getEntidade(dto));
+        }
+        val cadastro = repositorio.save(dto);
+
+        return cadastro;
     }
 
     fun atualizarPedido(id:Int, pedido:Pedido): PedidoCompletoResposta{

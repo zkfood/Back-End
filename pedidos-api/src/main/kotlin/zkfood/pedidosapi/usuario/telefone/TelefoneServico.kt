@@ -3,6 +3,8 @@ package zkfood.pedidosapi.usuario.telefone
 import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
+import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
+import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 import zkfood.pedidosapi.usuario.telefone.telefoneDado.Telefone
@@ -21,7 +23,7 @@ class TelefoneServico(
         return usuarioServico.acharPorId(idUsuarioParametro);
     }
 
-    fun cadastrar(
+    fun cadastrarDeDTO(
         novoTelefone: TelefoneCadastro,
         idUsuario: Int
     ): Telefone {
@@ -31,7 +33,17 @@ class TelefoneServico(
 
         telefone.usuario = usuarioEncontrado
 
-        val cadastro: Telefone = super.cadastrar(telefone, null);
+        val cadastro: Telefone = this.cadastrar(telefone, null);
+
+        return cadastro;
+    }
+
+    override fun cadastrar(dto: Telefone, exemplo: Telefone?): Telefone {
+        if (exemplo != null) {
+            val estaDuplicado: Boolean = repositorio.exists(super.combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, super.getEntidade(dto));
+        }
+        val cadastro = repositorio.save(dto);
 
         return cadastro;
     }
