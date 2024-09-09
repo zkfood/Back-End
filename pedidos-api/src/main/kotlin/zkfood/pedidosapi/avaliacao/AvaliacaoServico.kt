@@ -81,4 +81,22 @@ class AvaliacaoServico (
 
         avaliacaoRepositorio.deleteById(avaliacaoId);
     }
+
+    // relatórios
+
+    fun acharTop5PratosCom4ou5Estrelas(): List<Map<String, Any>> {
+        return avaliacaoRepositorio.acharTop5PratosCom4ou5Estrelas();
+    }
+
+    fun acharTop5PratosCom1ou2Estrelas(): List<Map<String, Any>> {
+        return avaliacaoRepositorio.acharTop5PratosCom1ou2Estrelas();
+    }
+
+    fun quantidadeAvaliacoesPorEstrelas(): List<Map<String, Any>> {
+        return avaliacaoRepositorio.quantidadeAvaliacoesPorEstrelas();
+    }
+
+    fun nuvemDePalavras(): List<String> {
+        return avaliacaoRepositorio.nuvemDePalavras();
+    }
 }
