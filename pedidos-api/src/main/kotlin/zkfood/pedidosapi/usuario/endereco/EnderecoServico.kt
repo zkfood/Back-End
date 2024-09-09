@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.Endereco
 import zkfood.pedidosapi.usuario.endereco.enderecoDado.EnderecoCadastro
 import zkfood.pedidosapi.nucleo.CrudServico
+import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
+import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
@@ -21,7 +23,7 @@ class EnderecoServico(
         return usuarioServico.acharPorId(idUsuarioParametro);
     }
 
-    fun cadastrar(
+    fun cadastrarDeDTO(
         novoEndereco: EnderecoCadastro,
         idUsuario: Int
     ): Endereco {
@@ -31,7 +33,17 @@ class EnderecoServico(
 
         endereco.usuario = usuarioEncontrado
 
-        val cadastro: Endereco = super.cadastrar(endereco, null);
+        val cadastro: Endereco = this.cadastrar(endereco, null);
+
+        return cadastro;
+    }
+
+    override fun cadastrar(dto: Endereco, exemplo: Endereco?): Endereco {
+        if (exemplo != null) {
+            val estaDuplicado: Boolean = repositorio.exists(super.combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, super.getEntidade(dto));
+        }
+        val cadastro = repositorio.save(dto);
 
         return cadastro;
     }

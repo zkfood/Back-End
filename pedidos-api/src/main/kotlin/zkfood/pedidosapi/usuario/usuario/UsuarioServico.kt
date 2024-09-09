@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode
 import org.springframework.web.server.ResponseStatusException
 import zkfood.pedidosapi.nucleo.EnviarEmail
 import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
+import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Login
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.NovaSenha
 import zkfood.pedidosapi.usuario.usuario.usuarioErros.LoginOuSenhaNaoInformados
@@ -20,7 +21,7 @@ class UsuarioServico(
     val enviarEmail: EnviarEmail,
     val mapper: ModelMapper
 ) : CrudServico<Usuario>(usuarioRepositorio) {
-    fun cadastrar(novoUsuario: UsuarioCadastro): Usuario {
+    fun cadastrarDeDto(novoUsuario: UsuarioCadastro): Usuario {
         val usuarioDto: Usuario = mapper.map(novoUsuario, Usuario::class.java);
         val presencialComEmail = !novoUsuario.eCadastroOnline && novoUsuario.email.isNotEmpty();
 
@@ -33,8 +34,18 @@ class UsuarioServico(
         }
 
         val filtro = Usuario(cpf = novoUsuario.cpf);
-        val cadastro = super.cadastrar(usuarioDto, filtro);
+        val cadastro = this.cadastrar(usuarioDto, filtro);
         if (presencialComEmail) enviarEmailSenha(usuarioDto);
+
+        return cadastro;
+    }
+
+    override fun cadastrar(dto: Usuario, exemplo: Usuario?): Usuario {
+        if (exemplo != null) {
+            val estaDuplicado: Boolean = repositorio.exists(super.combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, super.getEntidade(dto));
+        }
+        val cadastro = repositorio.save(dto);
 
         return cadastro;
     }
