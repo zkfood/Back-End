@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
+import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.produtos.produtoDado.Produto
 import zkfood.pedidosapi.produtos.produtoDado.ProdutoCadastro
 import zkfood.pedidosapi.produtos.tipoProduto.TipoProdutoServico
@@ -17,7 +18,17 @@ class ProdutoServico (
     fun cadastrarProduto(novoProduto: ProdutoCadastro):Produto{
         val produto: Produto = mapper.map(novoProduto, Produto::class.java);
 
-        val cadastro:Produto = super.cadastrar(produto, null);
+        val cadastro:Produto = this.cadastrar(produto, null);
+
+        return cadastro;
+    }
+
+    override fun cadastrar(dto: Produto, exemplo: Produto?): Produto {
+        if (exemplo != null) {
+            val estaDuplicado: Boolean = repositorio.exists(super.combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, super.getEntidade(dto));
+        }
+        val cadastro = repositorio.save(dto);
 
         return cadastro;
     }

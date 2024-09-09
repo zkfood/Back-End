@@ -16,7 +16,7 @@ class UsuarioControlador(
 ) {
     @PostMapping
     fun cadastrar(@RequestBody @Valid usuarioCadastro: UsuarioCadastro): ResponseEntity<Usuario> {
-        val novoUsuario: Usuario = usuarioServico.cadastrar(usuarioCadastro);
+        val novoUsuario: Usuario = usuarioServico.cadastrarDeDto(usuarioCadastro);
 
         return ResponseEntity.status(201).body(novoUsuario);
     }

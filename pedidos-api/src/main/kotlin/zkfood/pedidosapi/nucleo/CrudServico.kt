@@ -45,7 +45,7 @@ abstract class CrudServico<T : Any>(
         return lista;
     }
 
-    private fun combinadorFiltro(exemplo:T, ignorarFormatacaoEnum:IgnorarFormatacaoEnum):Example<T>{
+    protected fun combinadorFiltro(exemplo:T, ignorarFormatacaoEnum:IgnorarFormatacaoEnum):Example<T>{
         // obtém todas as chaves da classe que nós passarmos
         val propriedades = exemplo::class.members.filterIsInstance<KProperty1<T, *>>();
         // instancia a classe Example, para depois adicionarmos valores
@@ -75,17 +75,18 @@ abstract class CrudServico<T : Any>(
         if (entidade.isPresent) return entidade.get();
         throw NaoEncontradoPorIdExcecao(id);
     }
-    fun cadastrar(dto:T, exemplo:T?):T {
+    abstract fun cadastrar(dto:T, exemplo:T?):T
+//    {
         // aqui valida se o dado existe apartir de um filtro, e a formatação é padrão inativo, pois
         // AaA é diferente de AAA, mas esse filtro será refeito para uma forma melhor
-        if (exemplo != null) {
-            val estaDuplicado: Boolean = repositorio.exists(combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
-            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, getEntidade(dto));
-        }
-        val cadastro:T = repositorio.save(dto);
-
-        return cadastro;
-    }
+//        if (exemplo != null) {
+//            val estaDuplicado: Boolean = repositorio.exists(combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+//            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, this.getEntidade(dto));
+//        }
+//        val cadastro:T = repositorio.save(dto);
+//
+//        return cadastro;
+//    }
     fun atualizar(id:Int, dto: T):T {
         val entidade:T = this.acharPorId(id);
         val classe:Class<*>?= getEntidade(entidade).classe;
@@ -110,7 +111,7 @@ abstract class CrudServico<T : Any>(
 
         return dto;
     }
-    private fun getEntidade(entidade:T):EntidadesEnum{
+    protected fun getEntidade(entidade:T):EntidadesEnum{
         // recebe um dto que é do tipo que recebemos inicialmente (ORM)
         // chamamos o metodo fromClasse da nossa EntidadesEnum para descobrirmos sobre qual ORM estamos falando
         // o .javaClass faz isso por nós

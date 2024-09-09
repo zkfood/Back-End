@@ -17,7 +17,7 @@ class EnderecoControlador (
         @PathVariable idUsuario: Int,
         @RequestBody @Valid enderecoCadastro: EnderecoCadastro
     ): ResponseEntity<Endereco> {
-        val novoEndereco: Endereco = enderecoServico.cadastrar(enderecoCadastro, idUsuario);
+        val novoEndereco: Endereco = enderecoServico.cadastrarDeDTO(enderecoCadastro, idUsuario);
 
         return ResponseEntity.status(201).body(novoEndereco);
     }

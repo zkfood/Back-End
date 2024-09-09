@@ -3,6 +3,7 @@ package zkfood.pedidosapi.pedidos.estadoPedidoHistorico
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
+import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoDado.EstadoPedidoHistorico
 import zkfood.pedidosapi.pedidos.pedido.PedidoServico
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
@@ -12,18 +13,28 @@ import java.time.LocalDateTime
 class EstadoPedidoHistoricoServico(
     val estadoPedidoHistoricoRepositorio: EstadoPedidoHistoricoRepositorio
 ): CrudServico<EstadoPedidoHistorico>(estadoPedidoHistoricoRepositorio) {
-    fun cadastrar (idPedido:Int): MutableList<EstadoPedidoHistorico> {
+    fun cadastrarDeDTO (idPedido:Int): MutableList<EstadoPedidoHistorico> {
         val estadoPedidoHistoricoCadastro = EstadoPedidoHistorico();
         estadoPedidoHistoricoCadastro.pedido = idPedido;
         estadoPedidoHistoricoCadastro.hora = LocalDateTime.now();
         estadoPedidoHistoricoCadastro.estado = "Pedido em espera";
 
-        val estadoPedidoHistorico = super.cadastrar(estadoPedidoHistoricoCadastro, null);
+        val estadoPedidoHistorico = this.cadastrar(estadoPedidoHistoricoCadastro, null);
 
         val listaProdutosRetorno:MutableList<EstadoPedidoHistorico> = mutableListOf();
         listaProdutosRetorno.add(estadoPedidoHistorico);
 
         return listaProdutosRetorno;
+    }
+
+    override fun cadastrar(dto: EstadoPedidoHistorico, exemplo: EstadoPedidoHistorico?): EstadoPedidoHistorico {
+        if (exemplo != null) {
+            val estaDuplicado: Boolean = repositorio.exists(super.combinadorFiltro(exemplo, IgnorarFormatacaoEnum.INATIVO));
+            if (estaDuplicado) throw DadoDuplicadoExcecao(exemplo, super.getEntidade(dto));
+        }
+        val cadastro = repositorio.save(dto);
+
+        return cadastro;
     }
 
     fun listarEstadoPedidoHistorico(id:Int): List<EstadoPedidoHistorico> {
