@@ -9,7 +9,8 @@ enum class EstadoPedidoEnum(val estado: String) {
     PEDIDO_EM_PREPARO("Pedido em preparo"),
     PEDIDO_A_CAMINHO("Pedido a caminho"),
     PEDIDO_ENTREGUE("Pedido entregue"),
-    PEDIDO_CANCELADO("Pedido cancelado");
+    PEDIDO_CANCELADO("Pedido cancelado"),
+    PRODUTO_ADICIONADO_AO_PEDIDO("Produto adicionado ao pedido, em preparo");
 
     companion object {
         fun identificarEstado(tipo: String):EstadoPedidoEnum {

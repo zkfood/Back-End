@@ -17,6 +17,7 @@ import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCadastro
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCompletoResposta
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.PedidoUnitario
+import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ProdutoUnitarioCadastro
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioServico
 import zkfood.pedidosapi.produtos.ProdutoServico
 import zkfood.pedidosapi.produtos.produtoDado.ProdutoSimplesRespostaDto
@@ -40,8 +41,8 @@ class PedidoServico(
         val pedidoResposta = mapper.map(pedido, PedidoCompletoResposta::class.java);
         val listaProdutos = pedidoUnitarioServico.listarPedidoUnitario(id);
         val listaEstadoPedidoHistorico = estadoPedidoHistoricoServico.listarEstadoPedidoHistorico(id);
-        pedidoResposta.estado = listaEstadoPedidoHistorico.last().estado;
 
+        pedidoResposta.estado = listaEstadoPedidoHistorico.last().estado;
         pedidoResposta.produtos = conversorDeProdutos(pedidoResposta, listaProdutos);
         pedidoResposta.estadoPedidoHistorico = conversorDeEstadoPedidoHistorico(pedidoResposta, listaEstadoPedidoHistorico);
         pedidoResposta.usuario = conversorDeUsuario(pedido.usuario);
@@ -65,15 +66,13 @@ class PedidoServico(
     }
 
     fun cadastrarDeDTO (novoPedido: PedidoCadastro): PedidoCompletoResposta {
-        PedidoValidador.validarIds(novoPedido);
         TipoEntregaEnum.identificarTipo(novoPedido.tipoEntrega);
-        EstadoPedidoEnum.identificarEstado("Pedido em espera");
 
         val pedido = mapper.map(novoPedido, Pedido::class.java);
         val cadastro = this.cadastrar(pedido, null);
         val cadastroRetorno = mapper.map(cadastro, PedidoCompletoResposta::class.java);
 
-        val listaProdutos = pedidoUnitarioServico.cadastrar(cadastro.id!!, novoPedido.produtos);
+        val listaProdutos = pedidoUnitarioServico.cadastrarDeDto(cadastro.id!!, novoPedido.produtos);
         cadastroRetorno.produtos = conversorDeProdutos(cadastroRetorno, listaProdutos);
 
         val listaEstadoPedidoHistorico = estadoPedidoHistoricoServico.cadastrarDeDTO(cadastro.id!!);
@@ -104,23 +103,48 @@ class PedidoServico(
         return dto;
     }
 
+    fun adicionarProdutos(id:Int, listaProdutos:List<ProdutoUnitarioCadastro>): PedidoCompletoResposta {
+        val pedido = this.procurarPorId(id);
+        if (pedido.estado == EstadoPedidoEnum.PEDIDO_CANCELADO.estado || pedido.estado == EstadoPedidoEnum.PEDIDO_ENTREGUE.estado)
+            throw RuntimeException("Pedido cancelado ou finalizado");
+
+        pedidoUnitarioServico.cadastrarDeDto(id, listaProdutos);
+        val listaProdutosAtual = pedidoUnitarioServico.listarPedidoUnitario(id);
+
+        val produtosResposta = conversorDeProdutos(pedido, listaProdutosAtual);
+        pedido.produtos = produtosResposta;
+
+        estadoPedidoHistoricoServico.cadastrarDeDTO(id, EstadoPedidoEnum.PRODUTO_ADICIONADO_AO_PEDIDO.estado);
+        val listaEstadoPedidoHistorico = estadoPedidoHistoricoServico.listarEstadoPedidoHistorico(id);
+        pedido.estadoPedidoHistorico = conversorDeEstadoPedidoHistorico(pedido, listaEstadoPedidoHistorico);
+        pedido.estado = EstadoPedidoEnum.PRODUTO_ADICIONADO_AO_PEDIDO.estado;
+
+        return pedido;
+    }
+
+    fun deletarProduto(idProdutoUnitario: Int) {
+        pedidoUnitarioServico.deletarPorId(idProdutoUnitario);
+    }
+
     private fun conversorDeProdutos(
         pedidoRetorno:PedidoCompletoResposta,
         listaProdutos:List<PedidoUnitario>
     ):MutableList<ProdutoSimplesRespostaDto>? {
+        pedidoRetorno.produtos = mutableListOf();
         listaProdutos.forEach {
             val produtoRetorno = ProdutoSimplesRespostaDto();
-            val produto = produtoServico.acharPorId(it.id!!.produto!!);
+            val produto = produtoServico.acharPorId(it.produto!!);
 
-            produtoRetorno.id = it.id!!.produto!!;
+            produtoRetorno.id = it.produto;
+            produtoRetorno.idPedidoUnitario =  it.id
             produtoRetorno.quantidade = it.quantidade;
             produtoRetorno.observacao = it.observacao;
+            produtoRetorno.entregue = it.entregue;
             produtoRetorno.nome = produto.nome;
             produtoRetorno.valor = produto.valor;
             produtoRetorno.descricao = produto.descricao;
             produtoRetorno.qtdPessoas = produto.qtdPessoas;
 
-            pedidoRetorno.produtos = mutableListOf();
             pedidoRetorno.produtos!!.add(produtoRetorno);
         }
 
@@ -129,16 +153,19 @@ class PedidoServico(
     private fun conversorDeUsuario(usuarioId:Int?): UsuarioSimplesRespostaDto?{
         val usuario = if(usuarioId != null) usuarioServico.acharPorId(usuarioId) else null;
         val usuarioSimplesRespostaDto = if(usuario != null) mapper.map(usuario, UsuarioSimplesRespostaDto::class.java) else null;
+
         return usuarioSimplesRespostaDto;
     }
     private fun conversorDeTelefone(telefoneId:Int?): TelefoneSimplesRespostaDto?{
         val telefone = if(telefoneId != null) telefoneServico.acharPorId(telefoneId) else null;
         val telefoneSimplesRespostaDto = if(telefone != null) mapper.map(telefone, TelefoneSimplesRespostaDto::class.java) else null;
+
         return telefoneSimplesRespostaDto;
     }
     private fun conversorDeEndereco(enderecoId:Int?): EnderecoSimplesRespostaDto?{
         val endereco = if(enderecoId != null) enderecoServico.acharPorId(enderecoId) else null;
         val enderecoSimplesRespostaDto = if(endereco != null) mapper.map(endereco, EnderecoSimplesRespostaDto::class.java) else null;
+
         return enderecoSimplesRespostaDto;
     }
     private fun conversorDeEstadoPedidoHistorico(
