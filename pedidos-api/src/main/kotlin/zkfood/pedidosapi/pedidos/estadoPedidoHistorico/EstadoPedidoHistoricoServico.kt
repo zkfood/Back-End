@@ -2,6 +2,7 @@ package zkfood.pedidosapi.pedidos.estadoPedidoHistorico
 
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
+import zkfood.pedidosapi.nucleo.enums.EstadoPedidoEnum
 import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
 import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoDado.EstadoPedidoHistorico
@@ -13,11 +14,11 @@ import java.time.LocalDateTime
 class EstadoPedidoHistoricoServico(
     val estadoPedidoHistoricoRepositorio: EstadoPedidoHistoricoRepositorio
 ): CrudServico<EstadoPedidoHistorico>(estadoPedidoHistoricoRepositorio) {
-    fun cadastrarDeDTO (idPedido:Int): MutableList<EstadoPedidoHistorico> {
+    fun cadastrarDeDTO (idPedido:Int, estado: String? = null): MutableList<EstadoPedidoHistorico> {
         val estadoPedidoHistoricoCadastro = EstadoPedidoHistorico();
         estadoPedidoHistoricoCadastro.pedido = idPedido;
         estadoPedidoHistoricoCadastro.hora = LocalDateTime.now();
-        estadoPedidoHistoricoCadastro.estado = "Pedido em espera";
+        estadoPedidoHistoricoCadastro.estado = estado ?: EstadoPedidoEnum.PEDIDO_EM_ESPERA.estado;
 
         val estadoPedidoHistorico = this.cadastrar(estadoPedidoHistoricoCadastro, null);
 

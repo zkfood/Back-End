@@ -17,8 +17,6 @@ data class PedidoCompletoResposta (
 
     var numeroMesa:String? = null,
 
-    var delivery:Double? = null,
-
     var formaPagamento:String? = null,
 
     var motivoCancelamento: String? = null,
@@ -26,8 +24,6 @@ data class PedidoCompletoResposta (
     var tipoEntrega:String? = null,
 
     var usuario:UsuarioSimplesRespostaDto? = null,
-
-//    var colaborador:UsuarioSimplesRespostaDto? = null,
 
     var telefone: TelefoneSimplesRespostaDto? = null,
 
