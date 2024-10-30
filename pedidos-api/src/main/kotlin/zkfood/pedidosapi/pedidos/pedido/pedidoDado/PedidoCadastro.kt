@@ -8,10 +8,7 @@ import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
 data class PedidoCadastro(
     var numeroMesa:String? = null,
 
-    var delivery:Double? = null,
-
-    @field:NotBlank
-    var formaPagamento:String,
+    var formaPagamento:String? = null,
 
     @field:NotBlank
     var tipoEntrega:String,
@@ -20,8 +17,6 @@ data class PedidoCadastro(
     var produtos:List<ProdutoUnitarioCadastro>,
 
     var usuario:Int? = null,
-
-//    var colaborador:Int? = null,
 
     var telefone:Int? = null,
 

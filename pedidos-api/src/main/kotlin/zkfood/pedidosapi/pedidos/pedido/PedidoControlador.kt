@@ -3,6 +3,7 @@ package zkfood.pedidosapi.pedidos.pedido
 import jakarta.validation.Valid
 import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
+import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoAdicionarProduto
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCadastro
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCompletoResposta
+import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ProdutoUnitarioCadastro
 
 @RestController
 @RequestMapping("/pedidos")
@@ -46,5 +49,19 @@ class PedidoControlador(
         val pedidoAtualizado = pedidoServico.atualizarPedido(id, pedido);
 
         return ResponseEntity.status(200).body(pedidoAtualizado);
+    }
+
+    @PatchMapping("/{id}/adicionar-produtos")
+    fun adicionarProdutos(@PathVariable id: Int, @RequestBody pedido: PedidoAdicionarProduto):ResponseEntity<PedidoCompletoResposta> {
+        val pedidoAtualizado = pedidoServico.adicionarProdutos(id, pedido.listaProdutos);
+
+        return ResponseEntity.status(200).body(pedidoAtualizado)
+    }
+
+    @DeleteMapping("/deletar-produto/{idProdutoUnitario}")
+    fun deletarProduto(@PathVariable idProdutoUnitario: Int): ResponseEntity<Void> {
+        pedidoServico.deletarProduto(idProdutoUnitario);
+
+        return ResponseEntity.status(204).build();
     }
 }

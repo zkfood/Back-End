@@ -81,10 +81,10 @@ class UsuarioControlador(
     }
 
     // método não validado
-    @PostMapping("/recuperar-senha")
-    fun recuperarSenha (@RequestBody email:String): ResponseEntity<Void>{
-        usuarioServico.recuperarSenha(email);
-
-        return ResponseEntity.status(204).build();
-    }
+//    @PostMapping("/recuperar-senha")
+//    fun recuperarSenha (@RequestBody email:String): ResponseEntity<Void>{
+//        usuarioServico.recuperarSenha(email);
+//
+//        return ResponseEntity.status(204).build();
+//    }
 }

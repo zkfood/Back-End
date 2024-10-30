@@ -1,51 +1,50 @@
 package zkfood.pedidosapi.pedidos.pedidoUnitario
 
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
-import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ChaveCompostaPedidoUnitario
+import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.PedidoUnitario
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ProdutoUnitarioCadastro
 
 @Service
-class PedidoUnitarioServico(
+class PedidoUnitarioServico (
     val pedidoUnitarioRepositorio: PedidoUnitarioRepositorio
-) {
-    @Transactional
-    fun cadastrar (idPedido:Int, listaProdutos:List<ProdutoUnitarioCadastro>): List<PedidoUnitario> {
+): CrudServico<PedidoUnitario>(pedidoUnitarioRepositorio) {
+    fun cadastrarDeDto (idPedido:Int, listaProdutos:List<ProdutoUnitarioCadastro>): List<PedidoUnitario> {
         val listaProdutosRetorno:MutableList<PedidoUnitario> = mutableListOf();
         listaProdutos.forEach {
             val pedidoUnitario = PedidoUnitario();
-            val chaveComposta = ChaveCompostaPedidoUnitario();
-            chaveComposta.pedido = idPedido;
-            chaveComposta.produto = it.id;
+            pedidoUnitario.pedido = idPedido;
+            pedidoUnitario.produto = it.id;
 
-            pedidoUnitario.id = chaveComposta;
             pedidoUnitario.quantidade = it.quantidade;
             pedidoUnitario.observacao = it.observacao;
 
             pedidoUnitarioRepositorio.save(pedidoUnitario);
-            listaProdutosRetorno.add(pedidoUnitario)
+            listaProdutosRetorno.add(pedidoUnitario);
         }
 
         return listaProdutosRetorno;
     }
 
     fun listarPedidoUnitario(id:Int): List<PedidoUnitario> {
-        val listaPedidoUnitario = pedidoUnitarioRepositorio.findByIdPedido(id);
+        val listaPedidoUnitario = pedidoUnitarioRepositorio.findByPedido(id);
 
         return listaPedidoUnitario;
     }
 
     fun atualizar(dto: PedidoUnitario): PedidoUnitario {
-        val chaveCompostaPedidoUnitario = ChaveCompostaPedidoUnitario(pedido = dto.id!!.pedido, produto = dto.id!!.produto);
-        val entidade = pedidoUnitarioRepositorio.findById(chaveCompostaPedidoUnitario).get();
+        val entidade = pedidoUnitarioRepositorio.findById(dto.id!!).get();
 
         entidade.quantidade = dto.quantidade;
         entidade.observacao = dto.observacao;
+        entidade.entregue = dto.entregue;
 
         val entidadeAtualizada = pedidoUnitarioRepositorio.save(entidade);
 
         return entidadeAtualizada;
+    }
+
+    override fun cadastrar(dto: PedidoUnitario, exemplo: PedidoUnitario?): PedidoUnitario {
+        TODO("Não terá o método cadastrar,e le só está aqui, pois é obrigatório no crud serviço")
     }
 }
