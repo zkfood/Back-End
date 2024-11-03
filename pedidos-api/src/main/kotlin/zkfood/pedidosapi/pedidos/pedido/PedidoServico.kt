@@ -24,6 +24,8 @@ import zkfood.pedidosapi.produtos.produtoDado.ProdutoSimplesRespostaDto
 import zkfood.pedidosapi.usuario.endereco.EnderecoServico
 import zkfood.pedidosapi.usuario.telefone.TelefoneServico
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
+import java.time.LocalDate
+import java.time.ZoneId
 
 @Service
 class PedidoServico(
@@ -63,6 +65,28 @@ class PedidoServico(
         }
 
         return listaPedidoCompletoResposta;
+    }
+
+    fun pedidosKanban(): List<PedidoCompletoResposta>{
+        val listaPedido = super.listarEntidade(null, null);
+
+        val listaPedidoCompletoResposta:MutableList<PedidoCompletoResposta> = mutableListOf();
+        listaPedido.forEach {
+            val pedido = this.procurarPorId(it.id!!);
+            listaPedidoCompletoResposta.add(pedido);
+        }
+
+        val dataAtual = LocalDate.now().dayOfMonth
+
+        val pedidosDoDia = listaPedidoCompletoResposta.filter { pedido ->
+            pedido.estado != EstadoPedidoEnum.PEDIDO_CANCELADO.estado &&
+                    pedido.estado != EstadoPedidoEnum.PEDIDO_ENTREGUE.estado &&
+                    pedido.estadoPedidoHistorico!!.map {
+                        it.hora!!.dayOfMonth == dataAtual
+                    }.isNotEmpty();
+        }
+
+        return pedidosDoDia;
     }
 
     fun cadastrarDeDTO (novoPedido: PedidoCadastro): PedidoCompletoResposta {
