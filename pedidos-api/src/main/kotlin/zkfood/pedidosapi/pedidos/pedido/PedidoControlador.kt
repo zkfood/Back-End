@@ -32,9 +32,16 @@ class PedidoControlador(
 
     @GetMapping
     fun listarPedidos(@RequestParam idUsuario:Int):ResponseEntity<List<PedidoCompletoResposta>>{
-        val pedidoAtualizado = pedidoServico.listarPedidos(idUsuario);
+        val pedidos = pedidoServico.listarPedidos(idUsuario);
 
-        return ResponseEntity.status(200).body(pedidoAtualizado);
+        return ResponseEntity.status(200).body(pedidos);
+    }
+
+    @GetMapping("/kanban")
+    fun pedidosKanban(): ResponseEntity<List<PedidoCompletoResposta>>{
+        val pedidos = pedidoServico.pedidosKanban();
+
+        return ResponseEntity.status(200).body(pedidos);
     }
 
     @PostMapping
