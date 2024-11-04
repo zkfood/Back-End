@@ -71,10 +71,8 @@ class AvaliacaoServico (
         avaliacao.id = avaliacaoId
 
         val exemplo: Example<Avaliacao> = Example.of(avaliacao, combinador);
-        println(exemplo)
 
         val avaliacoes = avaliacaoRepositorio.findAll(exemplo);
-        println(avaliacoes)
 
         val resposta = mutableListOf<AvaliacaoRespostaDto>()
 
