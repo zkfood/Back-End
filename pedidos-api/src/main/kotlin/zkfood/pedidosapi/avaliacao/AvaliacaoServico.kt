@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.Avaliacao
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoDto
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoId
+import zkfood.pedidosapi.avaliacao.dto.AvaliacaoRespostaDto
 import zkfood.pedidosapi.produtos.ProdutoRepositorio
 import zkfood.pedidosapi.produtos.ProdutoServico
+import zkfood.pedidosapi.produtos.produtoDado.ProdutoSimplesRespostaDto
 import zkfood.pedidosapi.usuario.usuario.UsuarioRepositorio
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 
@@ -39,7 +41,7 @@ class AvaliacaoServico (
         return avaliacaoRepositorio.save(avaliacao)
     }
 
-    fun listarAvaliacoes(filtro: AvaliacaoDto): List<Avaliacao> {
+    fun listarAvaliacoes(filtro: AvaliacaoDto): List<AvaliacaoRespostaDto> {
         val combinador: ExampleMatcher = ExampleMatcher.matching();
 
         val avaliacao = Avaliacao();
@@ -70,7 +72,34 @@ class AvaliacaoServico (
 
         val exemplo: Example<Avaliacao> = Example.of(avaliacao, combinador);
 
-        return avaliacaoRepositorio.findAll(exemplo);
+        val avaliacoes = avaliacaoRepositorio.findAll(exemplo);
+
+        val resposta = mutableListOf<AvaliacaoRespostaDto>()
+
+        avaliacoes.map {
+            val produto = produtoServico.acharPorId(it.id?.produto!!)
+
+            val avaliacaoResposta = AvaliacaoRespostaDto();
+
+            avaliacaoResposta.id = it.id;
+            avaliacaoResposta.favorito = it.favorito;
+            avaliacaoResposta.descricao = it.descricao;
+            avaliacaoResposta.qtdEstrelas = it?.qtdEstrelas;
+
+            val produtoResposta = ProdutoSimplesRespostaDto();
+
+            produtoResposta.id = produto.id;
+            produtoResposta.descricao = produto.descricao;
+            produtoResposta.nome = produto.nome;
+            produtoResposta.valor = produto.valor;
+            produtoResposta.qtdPessoas = produto.qtdPessoas;
+
+            avaliacaoResposta.produto = produtoResposta;
+
+            resposta.add(avaliacaoResposta);
+        }
+
+        return resposta;
     }
 
     fun deletar(usuario: Int, produto: Int) {

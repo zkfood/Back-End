@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.Avaliacao
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoDto
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoId
+import zkfood.pedidosapi.avaliacao.dto.AvaliacaoRespostaDto
 
 @RestController
 @RequestMapping("/avaliacoes")
@@ -25,7 +26,7 @@ class AvaliacaoControlador (
         @RequestParam favorito: Boolean? = null,
         @RequestParam qtdEstrelas: Int? = null,
         @RequestParam descricao: String? = null,
-    ): ResponseEntity<List<Avaliacao>> {
+    ): ResponseEntity<List<AvaliacaoRespostaDto>> {
         val avaliacaoDto = AvaliacaoDto(
             usuario = usuario,
             produto = produto,
