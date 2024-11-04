@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.PedidoUnitario
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ProdutoUnitarioCadastro
+import java.util.concurrent.ArrayBlockingQueue
 
 @Service
 class PedidoUnitarioServico (
@@ -11,18 +12,26 @@ class PedidoUnitarioServico (
 ): CrudServico<PedidoUnitario>(pedidoUnitarioRepositorio) {
     fun cadastrarDeDto (idPedido:Int, listaProdutos:List<ProdutoUnitarioCadastro>): List<PedidoUnitario> {
         val listaProdutosRetorno:MutableList<PedidoUnitario> = mutableListOf();
-        listaProdutos.forEach {
+
+        val fila = ArrayBlockingQueue<ProdutoUnitarioCadastro>(listaProdutos.size);
+
+        listaProdutos.map {
+            fila.add(it);
+        }
+
+        for (i in 1..listaProdutos.size){
+            val produtoDaVez = fila.poll();
+
             val pedidoUnitario = PedidoUnitario();
             pedidoUnitario.pedido = idPedido;
-            pedidoUnitario.produto = it.id;
+            pedidoUnitario.produto = produtoDaVez.id;
 
-            pedidoUnitario.quantidade = it.quantidade;
-            pedidoUnitario.observacao = it.observacao;
+            pedidoUnitario.quantidade = produtoDaVez.quantidade;
+            pedidoUnitario.observacao = produtoDaVez.observacao;
 
             pedidoUnitarioRepositorio.save(pedidoUnitario);
             listaProdutosRetorno.add(pedidoUnitario);
         }
-
         return listaProdutosRetorno;
     }
 
