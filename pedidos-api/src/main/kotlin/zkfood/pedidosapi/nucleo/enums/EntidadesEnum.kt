@@ -1,6 +1,7 @@
 package zkfood.pedidosapi.nucleo.enums
 
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
+import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.PedidoUnitario
 import zkfood.pedidosapi.produtos.produtoDado.Produto
 import zkfood.pedidosapi.produtos.tipoProduto.tipoDado.TipoProduto
 import zkfood.pedidosapi.usuario.telefone.telefoneDado.Telefone
@@ -14,6 +15,7 @@ enum class EntidadesEnum(val entidade: String, val classe: Class<*>? = null) {
     ENDERECO("Endereços", Endereco::class.java),
     PEDIDO("Pedidos", Pedido::class.java),
     PRODUTO("Produtos", Produto::class.java),
+    PEDIDO_UNITARIO("Pedido Unitario", PedidoUnitario::class.java),
     TIPOPRODUTO("Tipo Produto", TipoProduto::class.java);
 
     companion object {

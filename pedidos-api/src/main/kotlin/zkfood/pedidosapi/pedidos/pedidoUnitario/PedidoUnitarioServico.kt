@@ -42,15 +42,7 @@ class PedidoUnitarioServico (
     }
 
     fun atualizar(dto: PedidoUnitario): PedidoUnitario {
-        val entidade = pedidoUnitarioRepositorio.findById(dto.id!!).get();
-
-        entidade.quantidade = dto.quantidade;
-        entidade.observacao = dto.observacao;
-        entidade.entregue = dto.entregue;
-
-        val entidadeAtualizada = pedidoUnitarioRepositorio.save(entidade);
-
-        return entidadeAtualizada;
+        return super.atualizar(dto.id!!, dto);
     }
 
     override fun cadastrar(dto: PedidoUnitario, exemplo: PedidoUnitario?): PedidoUnitario {
