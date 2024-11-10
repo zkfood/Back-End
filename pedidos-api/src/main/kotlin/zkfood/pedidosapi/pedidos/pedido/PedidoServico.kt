@@ -3,10 +3,7 @@ package zkfood.pedidosapi.pedidos.pedido
 import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.CrudServico
-import zkfood.pedidosapi.nucleo.dtos.EnderecoSimplesRespostaDto
-import zkfood.pedidosapi.nucleo.dtos.EstadoPedidoHistoricoSimpesRespostaDto
-import zkfood.pedidosapi.nucleo.dtos.TelefoneSimplesRespostaDto
-import zkfood.pedidosapi.nucleo.dtos.UsuarioSimplesRespostaDto
+import zkfood.pedidosapi.nucleo.dtos.*
 import zkfood.pedidosapi.nucleo.enums.EstadoPedidoEnum
 import zkfood.pedidosapi.nucleo.enums.IgnorarFormatacaoEnum
 import zkfood.pedidosapi.nucleo.enums.TipoEntregaEnum
@@ -16,6 +13,7 @@ import zkfood.pedidosapi.pedidos.estadoPedidoHistorico.EstadoPedidoHistoricoServ
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCadastro
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCompletoResposta
+import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidosPaginado
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.PedidoUnitario
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ProdutoUnitarioCadastro
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioServico
@@ -54,7 +52,7 @@ class PedidoServico(
         return pedidoResposta;
     }
 
-    fun listarPedidos(id: Int): List<PedidoCompletoResposta>{
+    fun listarPedidos(id: Int, paginacao: Paginacao): PedidosPaginado{
         val filtro = Pedido(usuario = id);
         val listaPedido = super.listarEntidade(filtro, IgnorarFormatacaoEnum.INATIVO);
 
@@ -64,7 +62,16 @@ class PedidoServico(
             listaPedidoCompletoResposta.add(pedido);
         }
 
-        return listaPedidoCompletoResposta;
+        val respostaRevertida = listaPedidoCompletoResposta.reversed();
+        val index = (paginacao.pagina!!.minus(1)) * paginacao.tamanho!!;
+        val toIndex = minOf(index + paginacao.tamanho!!, respostaRevertida.size);
+
+        paginacao.totalDePaginas = (respostaRevertida.size + paginacao.tamanho!! - 1) / paginacao.tamanho!!;
+        paginacao.totalDeDocumentos = respostaRevertida.size;
+
+        val listaPaginada = if (index < respostaRevertida.size) respostaRevertida.subList(index, toIndex) else emptyList();
+
+        return PedidosPaginado(listaPaginada, paginacao);
     }
 
     fun pedidosKanban(): List<PedidoCompletoResposta>{
