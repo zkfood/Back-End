@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
-import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoAdicionarProduto
-import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCadastro
-import zkfood.pedidosapi.pedidos.pedido.pedidoDado.PedidoCompletoResposta
+import zkfood.pedidosapi.nucleo.dtos.Paginacao
+import zkfood.pedidosapi.pedidos.pedido.pedidoDado.*
 import zkfood.pedidosapi.pedidos.pedidoUnitario.PedidoUnitarioDado.ProdutoUnitarioCadastro
 
 @RestController
@@ -31,8 +29,13 @@ class PedidoControlador(
     }
 
     @GetMapping
-    fun listarPedidos(@RequestParam idUsuario:Int):ResponseEntity<List<PedidoCompletoResposta>>{
-        val pedidos = pedidoServico.listarPedidos(idUsuario);
+    fun listarPedidos(
+        @RequestParam idUsuario:Int,
+        @RequestParam pagina:Int? = 1,
+        @RequestParam tamanho:Int? = 2,
+    ):ResponseEntity<PedidosPaginado>{
+        val paginacao = Paginacao(pagina, tamanho);
+        val pedidos = pedidoServico.listarPedidos(idUsuario, paginacao);
 
         return ResponseEntity.status(200).body(pedidos);
     }
