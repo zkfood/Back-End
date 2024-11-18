@@ -18,6 +18,9 @@ data class Produto (
 
     var qtdPessoas:String? = null,
 
+    @Column(name = "prato_do_dia")
+    var pratoDoDia:Int? = null,
+
     @Column(name = "tipo_produto_id")
     var tipoProduto:Int? = null,
 
