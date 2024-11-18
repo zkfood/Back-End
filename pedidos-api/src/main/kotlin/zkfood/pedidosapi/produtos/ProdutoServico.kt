@@ -8,6 +8,7 @@ import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.produtos.produtoDado.Produto
 import zkfood.pedidosapi.produtos.produtoDado.ProdutoCadastro
 import zkfood.pedidosapi.produtos.tipoProduto.TipoProdutoServico
+import java.time.LocalDateTime
 
 @Service
 class ProdutoServico (
@@ -36,7 +37,13 @@ class ProdutoServico (
     fun listarProdutos(tipo:String?, disponibilidade:Boolean?):List<Produto>{
         val filtro = Produto();
 
-        if (tipo != null) filtro.tipoProduto = tipoProdutoServico.listarProduto(tipo).id;
+        if (tipo != null) {
+            if (tipo == "PratoDoDia") {
+                filtro.pratoDoDia = LocalDateTime.now().dayOfWeek.value + 1;
+            } else {
+                filtro.tipoProduto = tipoProdutoServico.listarProduto(tipo).id;
+            }
+        }
         if (disponibilidade != null) filtro.disponibilidade = disponibilidade;
 
         val listaProdutos: List<Produto> = super.listarEntidade(filtro, IgnorarFormatacaoEnum.INATIVO);

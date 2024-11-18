@@ -173,6 +173,7 @@ class PedidoServico(
             produtoRetorno.entregue = it.entregue;
             produtoRetorno.nome = produto.nome;
             produtoRetorno.valor = produto.valor;
+            produtoRetorno.pratoDoDia = produto.pratoDoDia;
             produtoRetorno.descricao = produto.descricao;
             produtoRetorno.qtdPessoas = produto.qtdPessoas;
 

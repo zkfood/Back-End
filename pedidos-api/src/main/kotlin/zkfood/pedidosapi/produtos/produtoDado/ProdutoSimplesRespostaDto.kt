@@ -17,5 +17,7 @@ data class ProdutoSimplesRespostaDto(
 
     var qtdPessoas:String? = null,
 
+    var pratoDoDia: Int? = null,
+
     var descricao:String? = null,
 )
