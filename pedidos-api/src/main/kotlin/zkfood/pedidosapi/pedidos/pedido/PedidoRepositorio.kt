@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import zkfood.pedidosapi.pedidos.pedido.pedidoDado.Pedido
 import zkfood.pedidosapi.relatorios.financeiro.RelatorioFinanceiroDado.TopReceitasRespostaDto
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Repository
@@ -69,9 +70,42 @@ interface PedidoRepositorio: JpaRepository<Pedido, Int>{
     GROUP BY pr.nome
     ORDER BY receita DESC
 """, nativeQuery = true)
-    fun topReceitas(
+    fun topReceitasMesAno(
         mes: Int,
         ano: Int
     ): List<List<String>>
 
+    @Query("""
+    SELECT 
+    pr.nome AS produto,
+    SUM(pu.quantidade) AS quantidadeVendida,
+    SUM(pu.quantidade * pr.valor) AS receita
+FROM pedido p
+JOIN pedido_unitario pu ON p.id = pu.pedido_id
+JOIN produto pr ON pu.produto_id = pr.id
+JOIN estado_pedido_historico eph ON p.id = eph.pedido_id
+WHERE DATE(eph.hora) = :data
+GROUP BY pr.nome
+ORDER BY receita DESC
+""", nativeQuery = true)
+    fun topReceitas(
+        data: LocalDate
+    ): List<List<String>>
+
+    @Query("""
+    SELECT 
+    pr.nome AS produto,
+    SUM(pu.quantidade) AS quantidadeVendida,
+    SUM(pu.quantidade * pr.valor) AS receita
+FROM pedido p
+JOIN pedido_unitario pu ON p.id = pu.pedido_id
+JOIN produto pr ON pu.produto_id = pr.id
+JOIN estado_pedido_historico eph ON p.id = eph.pedido_id
+WHERE DATE(eph.hora) = :data
+GROUP BY pu.id
+ORDER BY receita DESC
+""", nativeQuery = true)
+    fun relatorioSaidasDoDia(
+        data: LocalDate
+    ): List<List<String>>
 }
