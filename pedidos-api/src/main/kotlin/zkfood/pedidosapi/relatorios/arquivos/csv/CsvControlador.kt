@@ -47,4 +47,19 @@ class CsvControlador(
         csvServico.uploadMotoboy(file);
         return ResponseEntity.status(200).body("Dados dos motoboy cadastrados com sucesso");
     }
+
+    @PostMapping("/motoboy-mes-ano")
+    fun motoboyMesAno(
+        @RequestParam mes: Int,
+        @RequestParam ano: Int
+    ): ResponseEntity<ByteArray> {
+        val arquivo = csvServico.motoboyMesAno(mes, ano);
+
+        val cabecalho = HttpHeaders().apply {
+            contentType = MediaType("text", "csv");
+            setContentDispositionFormData("attachment", "zkfood.csv");
+        }
+
+        return ResponseEntity(arquivo, cabecalho, HttpStatus.OK);
+    }
 }
