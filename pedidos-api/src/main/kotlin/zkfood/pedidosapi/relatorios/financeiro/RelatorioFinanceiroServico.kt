@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import zkfood.pedidosapi.pedidos.pedido.PedidoRepositorio
 import zkfood.pedidosapi.produtos.produtoDado.Produto
 import zkfood.pedidosapi.relatorios.financeiro.RelatorioFinanceiroDado.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
@@ -81,8 +82,8 @@ class RelatorioFinanceiroServico(
         return resposta;
     }
 
-    fun topReceitas(mes: Int, ano: Int): List<TopReceitasRespostaDto> {
-        val dados = pedidoRepositorio.topReceitas(mes, ano);
+    fun topReceitas(data: String): List<TopReceitasRespostaDto> {
+        val dados = pedidoRepositorio.topReceitas(LocalDate.parse(data));
 
         val resposta = mutableListOf<TopReceitasRespostaDto>();
 

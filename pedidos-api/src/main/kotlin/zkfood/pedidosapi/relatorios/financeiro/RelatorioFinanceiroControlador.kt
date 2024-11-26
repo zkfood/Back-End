@@ -37,11 +37,8 @@ class RelatorioFinanceiroControlador(
     }
 
     @GetMapping("/top-receitas")
-    fun topReceitas(
-        @RequestParam mes: Int,
-        @RequestParam ano: Int
-    ): ResponseEntity<List<TopReceitasRespostaDto>> {
-        val dados = relatorioFinanceiroServico.topReceitas(mes, ano)
+    fun topReceitas(@RequestParam data: String): ResponseEntity<List<TopReceitasRespostaDto>> {
+        val dados = relatorioFinanceiroServico.topReceitas(data);
 
         return ResponseEntity.status(200).body(dados);
     }
