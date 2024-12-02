@@ -73,6 +73,16 @@ class UsuarioControlador(
         return ResponseEntity.status(200).body(usuario);
     }
 
+    @PostMapping("/entrar/dashboard")
+    fun entrarDashboard(@RequestBody @Valid login: Login):ResponseEntity<Usuario>{
+        if(login.email == "tom@gmail.com" && login.senha == "Tom4002!"){
+            val usuario: Usuario = usuarioServico.entrar(login);
+            return ResponseEntity.status(200).body(usuario);
+        } else {
+            return ResponseEntity.status(401).build()
+        }
+    }
+
     @PostMapping("/{id}/sair")
     fun sair (@PathVariable id: Int): ResponseEntity<Void>{
         usuarioServico.sair(id);
