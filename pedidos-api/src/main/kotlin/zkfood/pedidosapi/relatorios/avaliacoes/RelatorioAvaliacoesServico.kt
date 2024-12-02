@@ -42,12 +42,13 @@ class RelatorioAvaliacoesServico(
     fun nuvemDePalavras(): NuvemDePalavras {
         // Obtém todas as descrições de avaliações
         val descricoes = avaliacaoServico.nuvemDePalavras();
+        val descricoesNaoNulas = descricoes.filter { it != null }
 
         // Contador para as palavras
         val wordCount = mutableMapOf<String, Int>();
 
         // Processa cada descrição
-        for (descricao in descricoes) {
+        for (descricao in descricoesNaoNulas) {
             // Divide a descrição em palavras, considerando apenas letras e números
             val words = descricao.split("\\s+".toRegex()).filter { it.isNotBlank() }
 
