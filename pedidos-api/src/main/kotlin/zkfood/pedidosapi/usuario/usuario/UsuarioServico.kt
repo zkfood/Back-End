@@ -58,13 +58,6 @@ class UsuarioServico(
         return usuarioAtualizado;
     }
 
-//    fun inativarUsuario(id: Int): Usuario {
-//        val usuario = acharPorId(id);
-//        usuario.autenticado = false;
-//
-//        return usuarioRepositorio.save(usuario);
-//    }
-
     fun entrar(login: Login): Usuario{
         if (login.email.isNullOrEmpty() || login.senha.isNullOrEmpty()) {
             throw LoginOuSenhaNaoInformados();
@@ -72,17 +65,6 @@ class UsuarioServico(
         val filtro = Usuario(email = login.email, senha = login.senha);
         val usuario = super.listarEntidade(filtro, IgnorarFormatacaoEnum.INATIVO)[0];
 
-        usuario.autenticado = true;
-        super.atualizar(usuario.id!!, usuario);
-
         return usuario;
-    }
-
-    fun sair(id: Int) {
-        if (id == null) throw ResponseStatusException(HttpStatusCode.valueOf(400));
-
-        val usuario: Usuario = acharPorId(id);
-        usuario.autenticado = false;
-        atualizar(usuario.id!!, usuario);
     }
 }
