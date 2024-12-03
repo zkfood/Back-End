@@ -17,7 +17,5 @@ data class Usuario (
     var senha: String? = null,
 
     @Column(name = "cpf", columnDefinition = "CHAR(11)")
-    var cpf: String? = null,
-
-    var autenticado: Boolean? = null
+    var cpf: String? = null
 )
