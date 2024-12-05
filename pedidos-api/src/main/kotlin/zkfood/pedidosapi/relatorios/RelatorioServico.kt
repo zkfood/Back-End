@@ -1,6 +1,5 @@
 package zkfood.pedidosapi.relatorios
 
-import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
 import zkfood.pedidosapi.nucleo.utilidade.ListaUtil
 import zkfood.pedidosapi.produtos.ProdutoRepositorio
@@ -8,7 +7,6 @@ import zkfood.pedidosapi.produtos.ProdutoRepositorio
 @Service
 class RelatorioServico(
     val produtosRepositorio: ProdutoRepositorio,
-    val mapper: ModelMapper
 ) {
     fun dashboardProdutos(): List<Any> {
         val listaDashboardProdutos = produtosRepositorio.dashboardProdutos();

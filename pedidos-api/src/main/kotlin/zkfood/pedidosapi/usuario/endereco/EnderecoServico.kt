@@ -10,12 +10,14 @@ import zkfood.pedidosapi.nucleo.erros.DadoDuplicadoExcecao
 import zkfood.pedidosapi.nucleo.erros.NaoEncontradoPorIdExcecao
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 import zkfood.pedidosapi.usuario.usuario.usuarioDado.Usuario
+import zkfood.pedidosapi.validadorDistancia.ValidadorDistanciaServico
 
 @Service
 class EnderecoServico(
     val enderecoRepositorio: EnderecoRepositorio,
     val mapper:ModelMapper,
-    val usuarioServico: UsuarioServico
+    val usuarioServico: UsuarioServico,
+    val validadorDistanciaServico: ValidadorDistanciaServico
 ): CrudServico<Endereco>(enderecoRepositorio) {
     private fun validarUsuario(idUsuarioParametro:Int): Usuario{
         if (idUsuarioParametro == null) throw NaoEncontradoPorIdExcecao(idUsuarioParametro);
@@ -28,6 +30,7 @@ class EnderecoServico(
         idUsuario: Int
     ): Endereco {
         val usuarioEncontrado = validarUsuario(idUsuario);
+        validadorDistanciaServico.validarDistancia(novoEndereco.cep);
 
         val endereco: Endereco = mapper.map(novoEndereco, Endereco::class.java);
 
@@ -66,6 +69,9 @@ class EnderecoServico(
 
     fun atualizar(id: Int, dto: Endereco, idUsuario: Int): Endereco {
         validarUsuario(idUsuario);
+        if (dto.cep != null) {
+            validadorDistanciaServico.validarDistancia(dto.cep!!);
+        }
 
         val endereco: Endereco = super.atualizar(id, dto);
 

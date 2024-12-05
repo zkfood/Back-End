@@ -70,4 +70,22 @@ class CsvServico (
             entregasMotoboyRepositorio.save(motoboy);
         }
     }
+
+    fun motoboyMesAno(mes: Int, ano: Int): ByteArray {
+        val dados = entregasMotoboyRepositorio.motoboyMesAno(mes, ano);
+
+        val resposta = mutableListOf<EntregasMotoboy>();
+        dados.map {
+            resposta.add(
+                EntregasMotoboy(
+                    id = it.id,
+                    data = it.data,
+                    nome = it.nome,
+                    endereco = it.endereco,
+                )
+            )
+        }
+
+        return csvAjudante.escrever(resposta);
+    }
 }
