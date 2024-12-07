@@ -64,6 +64,16 @@ class UsuarioControlador(
         return ResponseEntity.status(200).body(usuario);
     }
 
+    @PostMapping("/entrar/dashboard")
+    fun entrarDashboard(@RequestBody @Valid login: Login):ResponseEntity<Usuario>{
+        if(login.email == "tom@gmail.com" && login.senha == "Tom4002!"){
+            val usuario: Usuario = usuarioServico.entrar(login);
+            return ResponseEntity.status(200).body(usuario);
+        } else {
+            return ResponseEntity.status(401).build()
+        }
+    }
+
     // método não validado
 //    @PostMapping("/recuperar-senha")
 //    fun recuperarSenha (@RequestBody email:String): ResponseEntity<Void>{
