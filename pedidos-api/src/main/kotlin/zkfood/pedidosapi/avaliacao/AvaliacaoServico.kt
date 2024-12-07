@@ -1,7 +1,6 @@
 package zkfood.pedidosapi.avaliacao
 
 import jakarta.transaction.Transactional
-import org.modelmapper.ModelMapper
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
 import org.springframework.stereotype.Service
@@ -9,10 +8,8 @@ import zkfood.pedidosapi.avaliacao.avaliacaoDado.Avaliacao
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoDto
 import zkfood.pedidosapi.avaliacao.avaliacaoDado.AvaliacaoId
 import zkfood.pedidosapi.avaliacao.dto.AvaliacaoRespostaDto
-import zkfood.pedidosapi.produtos.ProdutoRepositorio
 import zkfood.pedidosapi.produtos.ProdutoServico
 import zkfood.pedidosapi.produtos.produtoDado.ProdutoSimplesRespostaDto
-import zkfood.pedidosapi.usuario.usuario.UsuarioRepositorio
 import zkfood.pedidosapi.usuario.usuario.UsuarioServico
 
 @Service
@@ -20,7 +17,6 @@ class AvaliacaoServico (
     val avaliacaoRepositorio: AvaliacaoRepositorio,
     val usuarioServico: UsuarioServico,
     val produtoServico: ProdutoServico,
-    val mapper:ModelMapper = ModelMapper()
 ){
     @Transactional
     fun salvar(novaAvaliacao: AvaliacaoDto): Avaliacao {

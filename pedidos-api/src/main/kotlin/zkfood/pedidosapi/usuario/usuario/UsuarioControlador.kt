@@ -57,15 +57,6 @@ class UsuarioControlador(
         return ResponseEntity.status(200).body(usuarioAtualizado);
     }
 
-//    talvez iremos usar no futuro
-//    @PatchMapping("/{id}/inativar")
-//    fun inativarUsuario(@PathVariable id: Int): ResponseEntity<Usuario> {
-//        val usuarioInativado: Usuario = usuarioServico.inativarUsuario(id);
-//
-//        return ResponseEntity.status(200).body(usuarioInativado);
-//    }
-
-
     @PostMapping("/entrar")
     fun entrar(@RequestBody @Valid login: Login):ResponseEntity<Usuario>{
         val usuario: Usuario = usuarioServico.entrar(login);
@@ -81,13 +72,6 @@ class UsuarioControlador(
         } else {
             return ResponseEntity.status(401).build()
         }
-    }
-
-    @PostMapping("/{id}/sair")
-    fun sair (@PathVariable id: Int): ResponseEntity<Void>{
-        usuarioServico.sair(id);
-
-        return ResponseEntity.status(204).build();
     }
 
     // método não validado
