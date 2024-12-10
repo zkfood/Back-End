@@ -97,6 +97,6 @@ class RelatorioFinanceiroServico(
             )
         }
 
-        return resposta;
+        return resposta.take(5);
     }
 }

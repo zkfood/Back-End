@@ -24,8 +24,8 @@ class ValidadorDistanciaServico(
 
         val distancia = response?.rows!![0].elements[0].distance.text.split(" ")[0].toDouble()
 
-        if (distancia > 3.0) {
-            throw DistanciaMaiorDoQueOPermitidoExcecao(cep, distancia);
-        }
+//        if (distancia > 3.0) {
+//            throw DistanciaMaiorDoQueOPermitidoExcecao(cep, distancia);
+//        }
     }
 }

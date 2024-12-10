@@ -73,9 +73,11 @@ class CsvServico (
 
     fun motoboyMesAno(mes: Int, ano: Int): ByteArray {
         val dados = entregasMotoboyRepositorio.motoboyMesAno(mes, ano);
+        println(dados)
 
         val resposta = mutableListOf<EntregasMotoboy>();
         dados.map {
+            println(it)
             resposta.add(
                 EntregasMotoboy(
                     id = it.id,
